@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Navigate} from 'react-router-dom';
-//import {styled, alpha} from '@mui/material/styles';
+import {makeStyles} from '@mui/styles';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
@@ -13,6 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {loginUser} from '../redux/slices/userSlice';
 
 const Login = () => {
+  const classes = useStyles();
   const [login, setLogin] = useState({email: '', password: ''});
   const state = useSelector(state => state.userState);
   const {isAuthenticated, user, isLoading, error} = state;
@@ -41,31 +42,25 @@ const Login = () => {
     dispatch(loginUser(login));
   };
 
-  if (isLoading) {
-    return (
-      <div>
-        <h1>Loading..</h1>
-      </div>
-    );
-  }
-
   if (isAuthenticated) {
     return <Navigate to={'/'} />;
   }
 
   return (
-    <Container maxWidth='sm'>
-      <div className=' '>
+    <div className={classes.root}>
+      <Container className={classes.container} maxWidth='sm'>
         <Box
+          className={classes.form}
           component='form'
           sx={{
-            '& > :not(style)': {m: 1, width: '25ch'},
+            '& > :not(style)': {m: 1, width: '100%'},
           }}
           noValidate
           autoComplete='off'
           onSubmit={handleSubmit}
         >
           <TextField
+            className={classes.input}
             id='outlined-basic'
             label='Email'
             variant='outlined'
@@ -98,9 +93,34 @@ const Login = () => {
             />
           )}
         </Box>
-      </div>
-    </Container>
+      </Container>
+    </div>
   );
 };
+
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    height: '100vh',
+  },
+  container: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    border: 0,
+    borderRadius: 15,
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: 'white',
+    padding: '30px',
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+  },
+  input: {
+    width: '100%',
+  },
+});
 
 export default Login;

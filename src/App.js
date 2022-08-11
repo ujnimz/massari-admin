@@ -51,6 +51,15 @@ function App() {
                 },
               }),
         },
+        components: {
+          MuiCssBaseline: {
+            styleOverrides: {
+              body: {
+                backgroundColor: 'grey',
+              },
+            },
+          },
+        },
       }),
     [mode],
   );
@@ -58,9 +67,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div className='app'>
+      <div className='app' style={{height: '100%'}}>
         {/* <Header /> */}
-        <Switch onChange={() => dispatch(changeTheme())} />
+        {/* <Switch onChange={() => dispatch(changeTheme())} /> */}
         <Routes>
           <Route path='/' element={<Dashboard />} />
           <Route path='login' element={<Login />} />
