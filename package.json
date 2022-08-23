@@ -51,5 +51,6 @@
   },
   "engines": {
     "node": "16.x"
-  }
+  },
+  "proxy": "https://massari-ecom.herokuapp.com"
 }

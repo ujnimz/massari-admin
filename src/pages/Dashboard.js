@@ -1,28 +1,32 @@
 import {Navigate} from 'react-router-dom';
-import React from 'react';
+import React, {useEffect} from 'react';
+import PageLayout from '../components/layouts/PageLayout';
+import Loading from './Loading';
 // DATA
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {getUser} from '../redux/slices/userSlice';
 
 const Dashboard = () => {
   const userState = useSelector(state => state.userState);
-  const {isAuthenticated, isLoading} = userState;
+  const {user, isLoading} = userState;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUser());
+  }, [dispatch]);
 
   if (isLoading) {
-    return (
-      <div>
-        <h1>Loading..</h1>
-      </div>
-    );
+    return <Loading />;
   }
 
-  if (!isAuthenticated) {
+  if (!user) {
     return <Navigate to={'/login'} />;
   }
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
+    <PageLayout>
+      <h1>Hi {user.name},</h1>
+    </PageLayout>
   );
 };
 

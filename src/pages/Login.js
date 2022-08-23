@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-
+import Loading from './Loading';
 import {useSnackbar} from 'notistack';
 // DATA
 import {useDispatch, useSelector} from 'react-redux';
@@ -16,12 +16,12 @@ const Login = () => {
   const classes = useStyles();
   const [login, setLogin] = useState({email: '', password: ''});
   const state = useSelector(state => state.userState);
-  const {isAuthenticated, user, isLoading, error} = state;
+  const {user, isLoading, error} = state;
 
   const {enqueueSnackbar} = useSnackbar();
 
   const dispatch = useDispatch();
-  console.log(user);
+
   useEffect(() => {
     if (error) {
       enqueueSnackbar(error.message, {variant: 'error'});
@@ -42,7 +42,11 @@ const Login = () => {
     dispatch(loginUser(login));
   };
 
-  if (isAuthenticated) {
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (user) {
     return <Navigate to={'/'} />;
   }
 

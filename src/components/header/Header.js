@@ -15,6 +15,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+// DATA
+import {useSelector} from 'react-redux';
 
 const Search = styled('div')(({theme}) => ({
   position: 'relative',
@@ -57,6 +59,9 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 }));
 
 export default function Header() {
+  //const userState = useSelector(state => state.userState);
+  //const {user} = userState;
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -97,7 +102,7 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      Hi,!<MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
     </Menu>
   );
