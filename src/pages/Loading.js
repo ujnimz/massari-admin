@@ -1,30 +1,25 @@
 import React from 'react';
-
-import {makeStyles} from '@mui/styles';
+import {styled, alpha} from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
-const Loading = () => {
-  const classes = useStyles();
+const PageWrapper = styled('div')(({theme}) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh',
+  backgroundColor: 'rgb(255, 255, 255)',
+}));
 
+const Loading = () => {
   return (
-    <div className={classes.root}>
+    <PageWrapper>
       <Box sx={{display: 'flex'}}>
         <CircularProgress />
       </Box>
-    </div>
+    </PageWrapper>
   );
 };
-
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    backgroundColor: 'rgb(255, 255, 255)',
-  },
-});
 
 export default Loading;

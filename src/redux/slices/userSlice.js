@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 
+// Login User
 export const loginUser = createAsyncThunk(
   'users/loginUser',
   async (login, {rejectWithValue}) => {
@@ -17,6 +18,21 @@ export const loginUser = createAsyncThunk(
       document.cookie = `token=${
         response.data.message.token
       }; expires=${now.toUTCString()}; path='/'`;
+
+      return response.data;
+    } catch ({response}) {
+      return rejectWithValue({code: response.status, ...response.data});
+    }
+  },
+);
+
+// Logout User
+export const logoutUser = createAsyncThunk(
+  'users/logoutUser',
+  async (login, {rejectWithValue}) => {
+    try {
+      const response = await axios.post(`/api/v1/logout/`);
+
       return response.data;
     } catch ({response}) {
       return rejectWithValue({code: response.status, ...response.data});
@@ -37,7 +53,7 @@ export const getUser = createAsyncThunk(
       const response = await axios.get(`/api/v1/me/`, config);
       return response.data;
     } catch ({response}) {
-      return rejectWithValue({code: response.status, ...response.data});
+      return console.log(response);
     }
   },
 );
@@ -48,7 +64,7 @@ const userSlice = createSlice({
     user: null,
     userToken: document.cookie,
     error: null,
-    isLoading: true,
+    isLoading: false,
   },
   extraReducers: builder => {
     builder
@@ -64,6 +80,21 @@ const userSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.error = action.payload.message;
+        state.isLoading = false;
+      })
+      // Logout User
+      .addCase(logoutUser.pending, (state, action) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.user = null;
+        state.userToken = null;
+        state.error = null;
+        state.isLoading = false;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
         state.error = action.payload.message;
         state.isLoading = false;
       })

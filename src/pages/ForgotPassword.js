@@ -58,7 +58,7 @@ const StyledLinkWrapper = styled('div')(({theme}) => ({
   fontSize: 14,
 }));
 
-const Signin = () => {
+const ForgotPassword = () => {
   const [login, setLogin] = useState({email: '', password: ''});
   const state = useSelector(state => state.userState);
   const {user, isLoading, error} = state;
@@ -99,11 +99,11 @@ const Signin = () => {
     <CenterLayout>
       <LoginWrapper maxWidth='sm'>
         <StyledTitle variant='h3' gutterBottom>
-          Register
+          Password Recovery
         </StyledTitle>
 
         <StyledSubTitle variant='subtitle1' gutterBottom>
-          Register on the ecommerce platform
+          Tell us your email so we can send you a reset link
         </StyledSubTitle>
 
         <Box
@@ -114,28 +114,14 @@ const Signin = () => {
         >
           <StyledTextInput
             id='outlined-basic'
-            label='Name'
-            variant='outlined'
-            name='name'
-            onChange={handleChange}
-          />
-          <StyledTextInput
-            id='outlined-basic'
             label='Email'
             variant='outlined'
             name='email'
             onChange={handleChange}
           />
-          <StyledTextInput
-            id='outlined-password-input'
-            label='Password'
-            type='password'
-            name='password'
-            autoComplete='current-password'
-            onChange={handleChange}
-          />
+
           <StyledButton type='submit' variant='contained' disabled={isLoading}>
-            Register
+            Recover Password
           </StyledButton>
 
           {isLoading && (
@@ -156,11 +142,14 @@ const Signin = () => {
         <StyledDivider />
 
         <StyledLinkWrapper>
-          <Link href='/login'>Have an account?</Link>
+          <Link href='/login'>Log in to account</Link>
+        </StyledLinkWrapper>
+        <StyledLinkWrapper>
+          <Link href='/signup'>Create an account</Link>
         </StyledLinkWrapper>
       </LoginWrapper>
     </CenterLayout>
   );
 };
 
-export default Signin;
+export default ForgotPassword;

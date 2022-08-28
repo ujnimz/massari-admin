@@ -4,11 +4,10 @@ import {ThemeProvider, createTheme} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Switch from '@mui/material/Switch';
 
-import {amber, grey, deepOrange, deepPurple} from '@mui/material/colors';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Signin from './pages/Signin';
-import Header from './components/header/Header';
+import ForgotPassword from './pages/ForgotPassword';
 
 // DATA
 import {useSelector, useDispatch} from 'react-redux';
@@ -26,28 +25,32 @@ function App() {
           ...(mode === 'light'
             ? {
                 // palette values for light mode
-                primary: deepPurple,
-                divider: amber[200],
+                primary: {
+                  main: '#5048E4',
+                },
+                divider: '#e6e8f0',
                 text: {
-                  primary: grey[900],
-                  secondary: grey[800],
+                  primary: '#121828',
+                  secondary: '#65748b',
                 },
                 background: {
-                  default: '#fff',
-                  paper: '#fff',
+                  default: '#F9FAFC',
+                  paper: '#FFFFFF',
                 },
               }
             : {
                 // palette values for dark mode
-                primary: deepOrange,
-                divider: deepOrange[700],
+                primary: {
+                  main: '#7582EB',
+                },
+                divider: '#2d3748',
                 text: {
-                  primary: '#fff',
-                  secondary: grey[500],
+                  primary: '#ffffff',
+                  secondary: '#a0aec0',
                 },
                 background: {
-                  default: grey[900],
-                  paper: grey[900],
+                  default: '#0A0F19',
+                  paper: '#111827',
                 },
               }),
         },
@@ -73,7 +76,8 @@ function App() {
         <Routes>
           <Route path='/' element={<Dashboard />} />
           <Route path='login' element={<Login />} />
-          <Route path='signin' element={<Signin />} />
+          <Route path='signup' element={<Signin />} />
+          <Route path='forgot-password' element={<ForgotPassword />} />
         </Routes>
       </div>
     </ThemeProvider>
