@@ -90,10 +90,6 @@ const ForgotPassword = () => {
     return <Loading />;
   }
 
-  if (user) {
-    return <Navigate to={'/'} />;
-  }
-
   return (
     <CenterLayout>
       <LoginWrapper maxWidth='sm'>

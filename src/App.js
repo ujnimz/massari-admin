@@ -9,17 +9,19 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import NotFound from './pages/NotFound';
+import Settings from './pages/Settings';
+import PrivateRoutes from './utils/PrivateRoutes';
 // DATA
 import {useSelector, useDispatch} from 'react-redux';
-import {getUser} from './redux/slices/userSlice';
+import {authUser} from './redux/slices/userSlice';
 
 function App() {
   const dispatch = useDispatch();
   const {mode} = useSelector(state => state.themeState);
 
   useEffect(() => {
-    if (localStorage.getItem('user')) {
-      dispatch(getUser());
+    if (localStorage.getItem('isAuth')) {
+      dispatch(authUser());
     }
   }, [dispatch]);
 
@@ -78,8 +80,11 @@ function App() {
       <CssBaseline />
       <div className='app' style={{height: '100%'}}>
         <Routes>
-          <Route index path='/' element={<Dashboard />} />
-          <Route path='/login' element={<Login />} />
+          <Route element={<PrivateRoutes />}>
+            <Route element={<Dashboard />} path='/' exact />
+            <Route path='/settings' element={<Settings />} />
+          </Route>
+          <Route element={<Login />} path='/login' />
           <Route path='/register' element={<Register />} />
           <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route path='*' element={<NotFound />} />

@@ -20,10 +20,9 @@ import {loginUser} from '../redux/slices/userSlice';
 
 // STYLES
 const LoginWrapper = styled(Container)(({theme}) => ({
-  background: 'rgb(255, 255, 255)',
+  background: theme.palette.background.paper,
   border: 0,
   borderRadius: theme.spacing(2),
-  boxShadow: 'rgb(100 116 139 / 12%) 0px 10px 15px',
   padding: theme.spacing(5),
 }));
 const StyledTitle = styled(Typography)(({theme}) => ({
@@ -90,10 +89,6 @@ const Login = () => {
     return <Loading />;
   }
 
-  if (user) {
-    return <Navigate to={'/'} />;
-  }
-
   return (
     <CenterLayout>
       <LoginWrapper maxWidth='sm'>
@@ -101,7 +96,7 @@ const Login = () => {
           Log in
         </StyledTitle>
 
-        {localStorage.getItem('newUser') ? (
+        {JSON.parse(localStorage.getItem('newUser')) ? (
           <StyledSubTitle variant='subtitle1' gutterBottom>
             Registration Success. Login on the ecommerce platform.
           </StyledSubTitle>

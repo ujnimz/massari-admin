@@ -18,6 +18,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Avatar from '@mui/material/Avatar';
 import Switch from '@mui/material/Switch';
+
 // UI
 import UserMenu from '../ui/elements/UserMenu';
 import SideBar from './SideBar';
@@ -171,7 +172,11 @@ export default function Header() {
           aria-haspopup='true'
           color='inherit'
         >
-          <AccountCircle />
+          {user.avatar ? (
+            <Avatar alt={user.name} src={user.avatar.url} />
+          ) : (
+            <AccountCircle />
+          )}
         </IconButton>
         <p>Profile</p>
       </MenuItem>
@@ -242,7 +247,11 @@ export default function Header() {
               onClick={handleProfileMenuOpen}
               color='inherit'
             >
-              <Avatar alt={user.name} src={user.avatar.url} />
+              {user.avatar ? (
+                <Avatar alt={user.name} src={user.avatar.url} />
+              ) : (
+                <AccountCircle />
+              )}
             </IconButton>
           </Box>
           <Box sx={{display: {xs: 'flex', md: 'none'}}}>

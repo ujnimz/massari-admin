@@ -38,7 +38,7 @@ export default function UserMenu() {
       ) : (
         ''
       )}
-      <MenuItem>
+      <MenuItem component='a' href='/settings'>
         <ListItemIcon>
           <Settings fontSize='small' />
         </ListItemIcon>

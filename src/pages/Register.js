@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Navigate} from 'react-router-dom';
+import {Navigate, useNavigate} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
 // MUI
 import {styled} from '@mui/material/styles';
@@ -58,13 +58,13 @@ const StyledLinkWrapper = styled('div')(({theme}) => ({
 }));
 
 const Register = () => {
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
+  const {enqueueSnackbar} = useSnackbar();
+
   const [login, setLogin] = useState({name: '', email: '', password: ''});
   const state = useSelector(state => state.userState);
   const {user, isLoading, error} = state;
-
-  const {enqueueSnackbar} = useSnackbar();
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (error) {
@@ -84,18 +84,11 @@ const Register = () => {
   const handleSubmit = event => {
     event.preventDefault();
     dispatch(registerUser(login));
+    navigate('/login', {replace: true});
   };
 
   if (isLoading) {
     return <Loading />;
-  }
-
-  if (user) {
-    return <Navigate to={'/'} />;
-  }
-
-  if (localStorage.getItem('newUser')) {
-    return <Navigate to={'/login'} />;
   }
 
   return (
@@ -121,6 +114,7 @@ const Register = () => {
             variant='outlined'
             name='name'
             onChange={handleChange}
+            value={login.name}
           />
           <StyledTextInput
             id='outlined-email-input'
@@ -128,6 +122,7 @@ const Register = () => {
             variant='outlined'
             name='email'
             onChange={handleChange}
+            value={login.email}
           />
           <StyledTextInput
             id='outlined-password-input'
@@ -136,6 +131,7 @@ const Register = () => {
             name='password'
             autoComplete='current-password'
             onChange={handleChange}
+            value={login.password}
           />
           <StyledButton type='submit' variant='contained' disabled={isLoading}>
             Register

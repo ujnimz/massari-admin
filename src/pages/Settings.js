@@ -7,7 +7,7 @@ import UserWelcome from '../components/body/UserWelcome';
 // REDUX
 import {useSelector} from 'react-redux';
 
-const Dashboard = () => {
+const Settings = () => {
   const {user, isLoading} = useSelector(state => state.userState);
 
   if (isLoading) {
@@ -21,4 +21,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Settings;
