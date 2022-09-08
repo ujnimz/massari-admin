@@ -60,8 +60,8 @@ const StyledLinkWrapper = styled('div')(({theme}) => ({
 
 const Login = () => {
   const [login, setLogin] = useState({email: '', password: ''});
-  const state = useSelector(state => state.userState);
-  const {user, isLoading, error} = state;
+  const userState = useSelector(state => state.userState);
+  const {user, isLoading, error} = userState;
 
   const {enqueueSnackbar} = useSnackbar();
 
@@ -102,9 +102,15 @@ const Login = () => {
           Log in
         </StyledTitle>
 
-        <StyledSubTitle variant='subtitle1' gutterBottom>
-          Sign in on the ecommerce platform
-        </StyledSubTitle>
+        {localStorage.getItem('newUser') ? (
+          <StyledSubTitle variant='subtitle1' gutterBottom>
+            Registration Success. Login on the ecommerce platform.
+          </StyledSubTitle>
+        ) : (
+          <StyledSubTitle variant='subtitle1' gutterBottom>
+            Welcome back! Login on the ecommerce platform.
+          </StyledSubTitle>
+        )}
 
         <Box
           component='form'
@@ -149,7 +155,7 @@ const Login = () => {
         <StyledDivider />
 
         <StyledLinkWrapper>
-          <Link href='/signup'>Create an account</Link>
+          <Link href='/register'>Create an account</Link>
         </StyledLinkWrapper>
         <StyledLinkWrapper>
           <Link href='/forgot-password'>Forgot password?</Link>

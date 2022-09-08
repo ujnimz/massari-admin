@@ -1,21 +1,28 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useEffect} from 'react';
 import {Routes, Route} from 'react-router-dom';
 import {ThemeProvider, createTheme} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import Switch from '@mui/material/Switch';
 
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
-import Signin from './pages/Signin';
+import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
+import NotFound from './pages/NotFound';
 
 // DATA
 import {useSelector, useDispatch} from 'react-redux';
-import {changeTheme} from './redux/slices/themeSlice';
+import {getUser} from './redux/slices/userSlice';
 
 function App() {
   const dispatch = useDispatch();
   const {mode} = useSelector(state => state.themeState);
+  const {user} = useSelector(state => state.userState);
+
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      dispatch(getUser());
+    }
+  }, [dispatch]);
 
   const theme = useMemo(
     () =>
@@ -71,13 +78,12 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className='app' style={{height: '100%'}}>
-        {/* <Header /> */}
-        {/* <Switch onChange={() => dispatch(changeTheme())} /> */}
         <Routes>
-          <Route path='/' element={<Dashboard />} />
-          <Route path='login' element={<Login />} />
-          <Route path='signup' element={<Signin />} />
-          <Route path='forgot-password' element={<ForgotPassword />} />
+          <Route index path='/' element={<Dashboard />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </div>
     </ThemeProvider>

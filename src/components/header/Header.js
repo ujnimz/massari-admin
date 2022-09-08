@@ -19,11 +19,13 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
+import Switch from '@mui/material/Switch';
 
 import UserMenu from '../ui/elements/UserMenu';
-
+import SideBar from './SideBar';
 // DATA
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {changeTheme, switchDrawer} from '../../redux/slices/themeSlice';
 
 const Search = styled('div')(({theme}) => ({
   position: 'relative',
@@ -71,8 +73,8 @@ const UserMenuWrapper = styled('div')(({theme}) => ({
 }));
 
 export default function Header() {
-  const userState = useSelector(state => state.userState);
-  const {user} = userState;
+  const dispatch = useDispatch();
+  const {user} = useSelector(state => state.userState);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -95,6 +97,10 @@ export default function Header() {
 
   const handleMobileMenuOpen = event => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleDrawer = () => {
+    dispatch(switchDrawer());
   };
 
   const menuId = 'primary-search-account-menu';
@@ -181,6 +187,7 @@ export default function Header() {
             edge='start'
             color='inherit'
             aria-label='open drawer'
+            onClick={handleDrawer}
             sx={{mr: 2}}
           >
             <MenuIcon />
@@ -204,6 +211,7 @@ export default function Header() {
           </Search>
           <Box sx={{flexGrow: 1}} />
           <Box sx={{display: {xs: 'none', md: 'flex'}}}>
+            <Switch onChange={() => dispatch(changeTheme())} />
             <IconButton
               size='large'
               aria-label='show 4 new mails'
@@ -248,6 +256,7 @@ export default function Header() {
           </Box>
         </Toolbar>
       </AppBar>
+      <SideBar />
       {renderMobileMenu}
       {renderMenu}
     </Box>

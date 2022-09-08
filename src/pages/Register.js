@@ -17,7 +17,7 @@ import CenterLayout from '../components/layouts/CenterLayout';
 
 // DATA
 import {useDispatch, useSelector} from 'react-redux';
-import {loginUser} from '../redux/slices/userSlice';
+import {registerUser} from '../redux/slices/userSlice';
 
 // STYLES
 const LoginWrapper = styled(Container)(({theme}) => ({
@@ -58,8 +58,8 @@ const StyledLinkWrapper = styled('div')(({theme}) => ({
   fontSize: 14,
 }));
 
-const Signin = () => {
-  const [login, setLogin] = useState({email: '', password: ''});
+const Register = () => {
+  const [login, setLogin] = useState({name: '', email: '', password: ''});
   const state = useSelector(state => state.userState);
   const {user, isLoading, error} = state;
 
@@ -84,7 +84,7 @@ const Signin = () => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    dispatch(loginUser(login));
+    dispatch(registerUser(login));
   };
 
   if (isLoading) {
@@ -93,6 +93,10 @@ const Signin = () => {
 
   if (user) {
     return <Navigate to={'/'} />;
+  }
+
+  if (localStorage.getItem('newUser')) {
+    return <Navigate to={'/login'} />;
   }
 
   return (
@@ -113,14 +117,14 @@ const Signin = () => {
           onSubmit={handleSubmit}
         >
           <StyledTextInput
-            id='outlined-basic'
+            id='outlined-name-input'
             label='Name'
             variant='outlined'
             name='name'
             onChange={handleChange}
           />
           <StyledTextInput
-            id='outlined-basic'
+            id='outlined-email-input'
             label='Email'
             variant='outlined'
             name='email'
@@ -163,4 +167,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default Register;

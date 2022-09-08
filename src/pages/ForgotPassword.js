@@ -145,7 +145,7 @@ const ForgotPassword = () => {
           <Link href='/login'>Log in to account</Link>
         </StyledLinkWrapper>
         <StyledLinkWrapper>
-          <Link href='/signup'>Create an account</Link>
+          <Link href='/register'>Create an account</Link>
         </StyledLinkWrapper>
       </LoginWrapper>
     </CenterLayout>

@@ -1,19 +1,12 @@
+import React from 'react';
 import {Navigate} from 'react-router-dom';
-import React, {useEffect} from 'react';
 import PageLayout from '../components/layouts/PageLayout';
 import Loading from './Loading';
 // DATA
-import {useDispatch, useSelector} from 'react-redux';
-import {getUser} from '../redux/slices/userSlice';
+import {useSelector} from 'react-redux';
 
 const Dashboard = () => {
-  const userState = useSelector(state => state.userState);
-  const {user, isLoading} = userState;
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getUser());
-  }, [dispatch]);
+  const {user, isLoading} = useSelector(state => state.userState);
 
   if (isLoading) {
     return <Loading />;

@@ -8,7 +8,6 @@
     "@fontsource/roboto": "^4.5.7",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.9.3",
-    "@mui/styles": "^5.9.3",
     "@reduxjs/toolkit": "^1.8.3",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
@@ -52,5 +51,5 @@
   "engines": {
     "node": "16.x"
   },
-  "proxy": "https://massari-ecom.herokuapp.com"
+  "proxy": "http://localhost:4000"
 }

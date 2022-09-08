@@ -12,12 +12,36 @@ export const loginUser = createAsyncThunk(
 
       let now = new Date();
       let time = now.getTime();
-      let expireTime = time + 3600 * 1000;
+      let expireTime = time + 86400 * 1000;
       now.setTime(expireTime);
 
+      // set cookie with token to get user data securely
       document.cookie = `token=${
         response.data.message.token
       }; expires=${now.toUTCString()}; path='/'`;
+      // store user in local storage to keep user logged in between page refreshes
+      localStorage.setItem('user', JSON.stringify(response.data.message.user));
+      // store user status in local storage
+      localStorage.setItem('newUser', false);
+
+      return response.data;
+    } catch ({response}) {
+      return rejectWithValue({code: response.status, ...response.data});
+    }
+  },
+);
+
+// Register User
+export const registerUser = createAsyncThunk(
+  'users/registerUser',
+  async (login, {rejectWithValue}) => {
+    try {
+      const config = {headers: {'Content-Type': 'application/json'}};
+
+      const response = await axios.post(`/api/v1/register`, login, config);
+
+      // store user status in local storage
+      localStorage.setItem('newUser', true);
 
       return response.data;
     } catch ({response}) {
@@ -31,7 +55,17 @@ export const logoutUser = createAsyncThunk(
   'users/logoutUser',
   async (login, {rejectWithValue}) => {
     try {
-      const response = await axios.post(`/api/v1/logout/`);
+      const response = await axios.get(`/api/v1/logout/`);
+      // Set Expire time
+      let now = new Date();
+      let time = now.getTime();
+      let expireTime = time + 5 * 1000;
+      now.setTime(expireTime);
+
+      // remove token cookie to log user out
+      document.cookie = `token=none; expires=${now.toUTCString()}; path='/'`;
+      // remove user from local storage to log user out
+      localStorage.removeItem('user');
 
       return response.data;
     } catch ({response}) {
@@ -51,9 +85,10 @@ export const getUser = createAsyncThunk(
       };
 
       const response = await axios.get(`/api/v1/me/`, config);
+
       return response.data;
     } catch ({response}) {
-      return console.log(response);
+      return rejectWithValue({code: response.status, ...response.data});
     }
   },
 );
@@ -62,7 +97,6 @@ const userSlice = createSlice({
   name: 'users',
   initialState: {
     user: null,
-    userToken: document.cookie,
     error: null,
     isLoading: false,
   },
@@ -75,11 +109,24 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload.message;
-        state.userToken = action.payload.message.token;
         state.error = null;
         state.isLoading = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.error = action.payload.message;
+        state.isLoading = false;
+      })
+      // Register User
+      .addCase(registerUser.pending, (state, action) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.user = null;
+        state.error = null;
+        state.isLoading = false;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
         state.error = action.payload.message;
         state.isLoading = false;
       })
@@ -90,7 +137,6 @@ const userSlice = createSlice({
       })
       .addCase(logoutUser.fulfilled, (state, action) => {
         state.user = null;
-        state.userToken = null;
         state.error = null;
         state.isLoading = false;
       })
@@ -110,6 +156,7 @@ const userSlice = createSlice({
       })
       .addCase(getUser.rejected, (state, action) => {
         state.error = action.payload.message;
+        state.user = null;
         state.isLoading = false;
       });
   },

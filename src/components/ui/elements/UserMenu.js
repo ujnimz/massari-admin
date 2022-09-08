@@ -21,15 +21,19 @@ export default function UserMenu() {
   return (
     <React.Fragment>
       <MenuItem>
-        <Avatar /> {user.name}
+        <Avatar alt={user.name} src={user.avatar.url} /> {user.name}
       </MenuItem>
       <Divider />
-      <MenuItem>
-        <ListItemIcon>
-          <PersonAdd fontSize='small' />
-        </ListItemIcon>
-        Add another account
-      </MenuItem>
+      {user.role === 'admin' ? (
+        <MenuItem>
+          <ListItemIcon>
+            <PersonAdd fontSize='small' />
+          </ListItemIcon>
+          Add another account
+        </MenuItem>
+      ) : (
+        ''
+      )}
       <MenuItem>
         <ListItemIcon>
           <Settings fontSize='small' />
