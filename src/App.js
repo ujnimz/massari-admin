@@ -1,14 +1,14 @@
-import React, {useMemo, useEffect, useState} from 'react';
+import React, {useMemo, useEffect} from 'react';
 import {Routes, Route} from 'react-router-dom';
+// MUI
 import {ThemeProvider, createTheme} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-
+// UI
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import NotFound from './pages/NotFound';
-
 // DATA
 import {useSelector, useDispatch} from 'react-redux';
 import {getUser} from './redux/slices/userSlice';
@@ -16,7 +16,6 @@ import {getUser} from './redux/slices/userSlice';
 function App() {
   const dispatch = useDispatch();
   const {mode} = useSelector(state => state.themeState);
-  const {user} = useSelector(state => state.userState);
 
   useEffect(() => {
     if (localStorage.getItem('user')) {

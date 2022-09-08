@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../header/Header';
 import Footer from '../footer/Footer';
-
+// MUI
 import {styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 
@@ -28,13 +28,10 @@ const Main = styled('main', {shouldForwardProp: prop => prop !== 'open'})(
   }),
 );
 
-const DrawerHeader = styled('div')(({theme}) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-  justifyContent: 'flex-end',
+const StyledBox = styled(Box)(({theme}) => ({
+  background: theme.palette.background.default,
+  padding: theme.spacing(3),
+  minHeight: '100vh',
 }));
 
 const PageLayout = ({children}) => {
@@ -44,8 +41,7 @@ const PageLayout = ({children}) => {
     <>
       <Main open={drawerOpen}>
         <Header />
-        {/* <DrawerHeader /> */}
-        {children}
+        <StyledBox>{children}</StyledBox>
         <Footer />
       </Main>
     </>

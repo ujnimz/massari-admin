@@ -3,7 +3,8 @@ import {Navigate} from 'react-router-dom';
 // UI
 import PageLayout from '../components/layouts/PageLayout';
 import Loading from './Loading';
-// STYLES
+import UserWelcome from '../components/body/UserWelcome';
+// REDUX
 import {useSelector} from 'react-redux';
 
 const Dashboard = () => {
@@ -19,7 +20,7 @@ const Dashboard = () => {
 
   return (
     <PageLayout>
-      <h1>Hi {user.name},</h1>
+      <UserWelcome />
     </PageLayout>
   );
 };
