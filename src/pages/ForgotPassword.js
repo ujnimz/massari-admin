@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {Navigate} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
-import {styled, alpha} from '@mui/material/styles';
+// MUI
+import {styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -10,12 +11,10 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
-
 // UI
 import Loading from './Loading';
 import CenterLayout from '../components/layouts/CenterLayout';
-
-// DATA
+// REDUX
 import {useDispatch, useSelector} from 'react-redux';
 import {loginUser} from '../redux/slices/userSlice';
 

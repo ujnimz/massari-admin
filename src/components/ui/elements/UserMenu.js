@@ -1,14 +1,20 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
+// MUI
+import {styled} from '@mui/material/styles';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
-// DATA
+// REDUX
 import {useDispatch, useSelector} from 'react-redux';
 import {logoutUser} from '../../../redux/slices/userSlice';
+
+// STYLES
+const StyledMenuItem = styled(MenuItem)(({theme}) => ({
+  fontWeight: theme.typography.fontWeightBold,
+}));
 
 export default function UserMenu() {
   const dispatch = useDispatch();
@@ -20,9 +26,7 @@ export default function UserMenu() {
   };
   return (
     <React.Fragment>
-      <MenuItem>
-        <Avatar alt={user.name} src={user.avatar.url} /> {user.name}
-      </MenuItem>
+      <StyledMenuItem>{user.name}</StyledMenuItem>
       <Divider />
       {user.role === 'admin' ? (
         <MenuItem>

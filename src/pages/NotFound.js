@@ -1,15 +1,17 @@
 import React from 'react';
+// MUI
 import {styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+// STYLES
 const PageWrapper = styled('div')(({theme}) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   height: '100vh',
-  backgroundColor: 'rgb(255, 255, 255)',
+  backgroundColor: theme.palette.primary,
 }));
 
 const NotFound = () => {

@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  mode: 'light',
+  mode: localStorage.getItem('mode') ? localStorage.getItem('mode') : 'light',
   drawerOpen: false,
 };
 
@@ -11,6 +11,7 @@ const themeSlice = createSlice({
   reducers: {
     changeTheme: state => {
       state.mode = state.mode === 'light' ? 'dark' : 'light';
+      localStorage.setItem('mode', state.mode);
     },
     switchDrawer: state => {
       state.drawerOpen = state.drawerOpen === true ? false : true;

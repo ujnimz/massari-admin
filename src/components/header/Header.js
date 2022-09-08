@@ -1,4 +1,5 @@
 import * as React from 'react';
+// MUI
 import {styled, alpha} from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,18 +16,16 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
 import Switch from '@mui/material/Switch';
-
+// UI
 import UserMenu from '../ui/elements/UserMenu';
 import SideBar from './SideBar';
-// DATA
+// REDUX
 import {useSelector, useDispatch} from 'react-redux';
 import {changeTheme, switchDrawer} from '../../redux/slices/themeSlice';
 
+// STYLES
 const Search = styled('div')(({theme}) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -75,6 +74,7 @@ const UserMenuWrapper = styled('div')(({theme}) => ({
 export default function Header() {
   const dispatch = useDispatch();
   const {user} = useSelector(state => state.userState);
+  const {mode} = useSelector(state => state.themeState);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -198,7 +198,7 @@ export default function Header() {
             component='div'
             sx={{display: {xs: 'none', sm: 'block'}}}
           >
-            MUI
+            MASSARI STORE
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -211,7 +211,10 @@ export default function Header() {
           </Search>
           <Box sx={{flexGrow: 1}} />
           <Box sx={{display: {xs: 'none', md: 'flex'}}}>
-            <Switch onChange={() => dispatch(changeTheme())} />
+            <Switch
+              onChange={() => dispatch(changeTheme())}
+              checked={mode !== 'light'}
+            />
             <IconButton
               size='large'
               aria-label='show 4 new mails'
@@ -239,7 +242,7 @@ export default function Header() {
               onClick={handleProfileMenuOpen}
               color='inherit'
             >
-              <AccountCircle />
+              <Avatar alt={user.name} src={user.avatar.url} />
             </IconButton>
           </Box>
           <Box sx={{display: {xs: 'flex', md: 'none'}}}>

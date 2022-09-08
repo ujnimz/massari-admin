@@ -1,8 +1,9 @@
 import React from 'react';
 import {Navigate} from 'react-router-dom';
+// UI
 import PageLayout from '../components/layouts/PageLayout';
 import Loading from './Loading';
-// DATA
+// STYLES
 import {useSelector} from 'react-redux';
 
 const Dashboard = () => {

@@ -1,8 +1,10 @@
 import React from 'react';
-import {styled, alpha} from '@mui/material/styles';
+// MUI
+import {styled} from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
+// STYLES
 const PageWrapper = styled('div')(({theme}) => ({
   display: 'flex',
   flexDirection: 'column',
