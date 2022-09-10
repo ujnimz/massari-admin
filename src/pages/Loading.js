@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
 // STYLES
-const PageWrapper = styled('div')(({theme}) => ({
+const StyledBox = styled(Box)(({theme}) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -16,11 +16,9 @@ const PageWrapper = styled('div')(({theme}) => ({
 
 const Loading = () => {
   return (
-    <PageWrapper>
-      <Box sx={{display: 'flex'}}>
-        <CircularProgress />
-      </Box>
-    </PageWrapper>
+    <StyledBox>
+      <CircularProgress />
+    </StyledBox>
   );
 };
 

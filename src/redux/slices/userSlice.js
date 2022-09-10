@@ -16,9 +16,9 @@ export const loginUser = createAsyncThunk(
       now.setTime(expireTime);
 
       // set cookie with token to get user data securely
-      document.cookie = `token=${
-        response.data.message.token
-      }; expires=${now.toUTCString()}; path='/'`;
+      // document.cookie = `token=${
+      //   response.data.message.token
+      // }; expires=${now.toUTCString()}; path='/'`;
       // store user in local storage to keep user logged in between page refreshes
       localStorage.setItem('user', JSON.stringify(response.data.message.user));
       // store user status in local storage
@@ -36,7 +36,6 @@ export const registerUser = createAsyncThunk(
   'users/registerUser',
   async (login, {rejectWithValue}) => {
     try {
-      console.log(login);
       const config = {headers: {'Content-Type': 'application/json'}};
 
       const response = await axios.post(`/api/v1/register`, login, config);
@@ -112,6 +111,42 @@ export const authUser = createAsyncThunk(
 
       return response.data.user;
     } catch ({response}) {
+      localStorage.setItem('isAuth', false);
+      return rejectWithValue({code: response.status, ...response.data});
+    }
+  },
+);
+
+// UPDATE THE USER
+export const updateUser = createAsyncThunk(
+  'users/updateUser',
+  async (login, {rejectWithValue}) => {
+    try {
+      let newData = null;
+      //console.log(login);
+      if (login.newAvatar) {
+        newData = {
+          name: login.name,
+          email: login.email,
+          avatar: login.newAvatar.url,
+        };
+      } else {
+        newData = {
+          name: login.name,
+          email: login.email,
+          avatar: '',
+        };
+      }
+
+      console.log(newData);
+      const config = {
+        headers: {'Content-Type': 'application/json', withCredentials: true},
+      };
+
+      const response = await axios.put(`/api/v1/me/update`, newData, config);
+
+      return response.data;
+    } catch ({response}) {
       return rejectWithValue({code: response.status, ...response.data});
     }
   },
@@ -162,6 +197,7 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(logoutUser.fulfilled, (state, action) => {
+        state.isAuth = false;
         state.user = null;
         state.error = null;
         state.isLoading = false;
@@ -181,6 +217,7 @@ const userSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(getUser.rejected, (state, action) => {
+        state.isAuth = false;
         state.error = null;
         state.user = null;
         state.isLoading = false;
@@ -197,8 +234,22 @@ const userSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(authUser.rejected, (state, action) => {
-        state.error = null;
+        state.isAuth = false;
         state.user = null;
+        state.error = null;
+        state.isLoading = false;
+      })
+      // Update A USER
+      .addCase(updateUser.pending, (state, action) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.error = null;
+        state.isLoading = false;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.error = action.payload;
         state.isLoading = false;
       });
   },

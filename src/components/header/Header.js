@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Link} from 'react-router-dom';
 // MUI
 import {styled, alpha} from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -70,6 +71,11 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 const UserMenuWrapper = styled('div')(({theme}) => ({
   paddingLeft: 20,
   paddingRight: 20,
+}));
+
+const Logo = styled(Link)(({theme}) => ({
+  color: theme.palette.primary.contrastText,
+  textDecoration: 'none',
 }));
 
 export default function Header() {
@@ -197,14 +203,17 @@ export default function Header() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant='h6'
-            noWrap
-            component='div'
-            sx={{display: {xs: 'none', sm: 'block'}}}
-          >
-            MASSARI STORE
-          </Typography>
+          <Logo to='/'>
+            <Typography
+              variant='h6'
+              noWrap
+              component='div'
+              sx={{display: {xs: 'none', sm: 'block'}}}
+            >
+              MASSARI STORE
+            </Typography>
+          </Logo>
+
           <Search>
             <SearchIconWrapper>
               <SearchIcon />

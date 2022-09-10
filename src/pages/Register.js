@@ -64,7 +64,7 @@ const Register = () => {
 
   const [login, setLogin] = useState({name: '', email: '', password: ''});
   const state = useSelector(state => state.userState);
-  const {user, isLoading, error} = state;
+  const {isAuth, isLoading, error} = state;
 
   useEffect(() => {
     if (error) {
@@ -89,6 +89,10 @@ const Register = () => {
 
   if (isLoading) {
     return <Loading />;
+  }
+
+  if (isAuth) {
+    return <Navigate to='/' />;
   }
 
   return (

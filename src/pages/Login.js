@@ -57,13 +57,12 @@ const StyledLinkWrapper = styled('div')(({theme}) => ({
 }));
 
 const Login = () => {
+  const {enqueueSnackbar} = useSnackbar();
+  const dispatch = useDispatch();
+
   const [login, setLogin] = useState({email: '', password: ''});
   const userState = useSelector(state => state.userState);
-  const {user, isLoading, error} = userState;
-
-  const {enqueueSnackbar} = useSnackbar();
-
-  const dispatch = useDispatch();
+  const {isAuth, isLoading, error} = userState;
 
   useEffect(() => {
     if (error) {
@@ -87,6 +86,10 @@ const Login = () => {
 
   if (isLoading) {
     return <Loading />;
+  }
+
+  if (isAuth) {
+    return <Navigate to='/' />;
   }
 
   return (

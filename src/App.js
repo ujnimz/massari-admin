@@ -1,5 +1,5 @@
 import React, {useMemo, useEffect} from 'react';
-import {Routes, Route} from 'react-router-dom';
+import {Routes, Route, Navigate} from 'react-router-dom';
 // MUI
 import {ThemeProvider, createTheme} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -18,12 +18,13 @@ import {authUser} from './redux/slices/userSlice';
 function App() {
   const dispatch = useDispatch();
   const {mode} = useSelector(state => state.themeState);
+  const {isAuth} = useSelector(state => state.userState);
 
   useEffect(() => {
-    if (localStorage.getItem('isAuth')) {
+    if (isAuth) {
       dispatch(authUser());
     }
-  }, [dispatch]);
+  }, [isAuth, dispatch]);
 
   const theme = useMemo(
     () =>
@@ -85,9 +86,9 @@ function App() {
             <Route path='/settings' element={<Settings />} />
           </Route>
           <Route element={<Login />} path='/login' />
-          <Route path='/register' element={<Register />} />
-          <Route path='/forgot-password' element={<ForgotPassword />} />
-          <Route path='*' element={<NotFound />} />
+          <Route element={<Register />} path='/register' />
+          <Route element={<ForgotPassword />} path='/forgot-password' />
+          <Route element={<NotFound />} path='*' />
         </Routes>
       </div>
     </ThemeProvider>
