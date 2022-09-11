@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {Link} from 'react-router-dom';
 // MUI
 import {styled} from '@mui/material/styles';
 import MenuItem from '@mui/material/MenuItem';
@@ -25,7 +25,7 @@ export default function UserMenu() {
     dispatch(logoutUser());
   };
   return (
-    <React.Fragment>
+    <>
       <StyledMenuItem>{user.name}</StyledMenuItem>
       <Divider />
       {user.role === 'admin' ? (
@@ -38,7 +38,7 @@ export default function UserMenu() {
       ) : (
         ''
       )}
-      <MenuItem component='a' href='/settings'>
+      <MenuItem component={Link} to='/settings'>
         <ListItemIcon>
           <Settings fontSize='small' />
         </ListItemIcon>
@@ -50,6 +50,6 @@ export default function UserMenu() {
         </ListItemIcon>
         Logout
       </MenuItem>
-    </React.Fragment>
+    </>
   );
 }

@@ -1,5 +1,7 @@
 import React, {useMemo, useEffect} from 'react';
 import {Routes, Route, Navigate} from 'react-router-dom';
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // MUI
 import {ThemeProvider, createTheme} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -90,6 +92,7 @@ function App() {
           <Route element={<ForgotPassword />} path='/forgot-password' />
           <Route element={<NotFound />} path='*' />
         </Routes>
+        <ToastContainer position='bottom-right' autoClose={2000} />
       </div>
     </ThemeProvider>
   );

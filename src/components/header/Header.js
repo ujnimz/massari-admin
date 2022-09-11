@@ -43,7 +43,6 @@ const Search = styled('div')(({theme}) => ({
     width: 'auto',
   },
 }));
-
 const SearchIconWrapper = styled('div')(({theme}) => ({
   padding: theme.spacing(0, 2),
   height: '100%',
@@ -53,7 +52,6 @@ const SearchIconWrapper = styled('div')(({theme}) => ({
   alignItems: 'center',
   justifyContent: 'center',
 }));
-
 const StyledInputBase = styled(InputBase)(({theme}) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
@@ -67,12 +65,10 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
     },
   },
 }));
-
 const UserMenuWrapper = styled('div')(({theme}) => ({
   paddingLeft: 20,
   paddingRight: 20,
 }));
-
 const Logo = styled(Link)(({theme}) => ({
   color: theme.palette.primary.contrastText,
   textDecoration: 'none',

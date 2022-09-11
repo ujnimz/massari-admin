@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-
+import {toast} from 'react-toastify';
 // LOGIN A USER
 export const loginUser = createAsyncThunk(
   'users/loginUser',
@@ -108,7 +108,8 @@ export const authUser = createAsyncThunk(
       const response = await axios.get(`/api/v1/me/`, config);
 
       localStorage.setItem('isAuth', response.data.success);
-
+      // Show Notification
+      toast.success('User has been authenticated.');
       return response.data.user;
     } catch ({response}) {
       localStorage.setItem('isAuth', false);
@@ -123,28 +124,27 @@ export const updateUser = createAsyncThunk(
   async (login, {rejectWithValue}) => {
     try {
       let newData = null;
-      //console.log(login);
-      if (login.newAvatar) {
-        newData = {
-          name: login.name,
-          email: login.email,
-          avatar: login.newAvatar.url,
-        };
-      } else {
+      if (login.avatar.public_id !== '') {
         newData = {
           name: login.name,
           email: login.email,
           avatar: '',
         };
+      } else {
+        newData = {
+          name: login.name,
+          email: login.email,
+          avatar: login.avatar.url,
+        };
       }
 
-      console.log(newData);
       const config = {
         headers: {'Content-Type': 'application/json', withCredentials: true},
       };
 
       const response = await axios.put(`/api/v1/me/update`, newData, config);
-
+      // Show Notification
+      toast.success('Profile has been updated.');
       return response.data;
     } catch ({response}) {
       return rejectWithValue({code: response.status, ...response.data});

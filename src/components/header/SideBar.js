@@ -1,3 +1,4 @@
+import {Link} from 'react-router-dom';
 // MUI
 import {styled, useTheme} from '@mui/material/styles';
 import Drawer from '@mui/material/Drawer';
@@ -12,6 +13,10 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import GroupIcon from '@mui/icons-material/Group';
 // REDUX
 import {useSelector, useDispatch} from 'react-redux';
 import {switchDrawer} from '../../redux/slices/themeSlice';
@@ -26,6 +31,14 @@ const DrawerHeader = styled('div')(({theme}) => ({
   ...theme.mixins.toolbar,
   justifyContent: 'flex-end',
 }));
+
+const AdminMenu = ['Inbox', 'Starred', 'Send email', 'Drafts'];
+const AdminMenu2 = [
+  {title: 'Inbox', link: '', icon: ''},
+  'Starred',
+  'Send email',
+  'Drafts',
+];
 
 export default function PersistentDrawerLeft() {
   const dispatch = useDispatch();
@@ -62,18 +75,45 @@ export default function PersistentDrawerLeft() {
       </DrawerHeader>
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to='/'>
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
+            <ListItemText primary='Dashboard' />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to='/products'>
+            <ListItemIcon>
+              <LocalMallIcon />
+            </ListItemIcon>
+            <ListItemText primary='Products' />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to='/orders'>
+            <ListItemIcon>
+              <ShoppingCartCheckoutIcon />
+            </ListItemIcon>
+            <ListItemText primary='Orders' />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to='/customers'>
+            <ListItemIcon>
+              <GroupIcon />
+            </ListItemIcon>
+            <ListItemText primary='Customers' />
+          </ListItemButton>
+        </ListItem>
       </List>
+
       <Divider />
+
       <List>
         {['All mail', 'Trash', 'Spam'].map((text, index) => (
           <ListItem key={text} disablePadding>

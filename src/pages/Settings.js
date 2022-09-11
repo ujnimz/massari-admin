@@ -44,12 +44,10 @@ const Settings = () => {
   const dispatch = useDispatch();
 
   const [login, setLogin] = useState({name: '', email: '', avatar: ''});
-  const [newAvatar, setNewAvatar] = useState(null);
   const {isLoading, user} = useSelector(state => state.userState);
 
   useEffect(() => {
     setLogin({...login, ...user});
-    setNewAvatar(user.avatar);
     return () => {
       setLogin(null);
     };
@@ -65,14 +63,10 @@ const Settings = () => {
     const fileReader = new FileReader();
     fileReader.readAsDataURL(event.target.files[0]);
     fileReader.onload = e => {
-      setNewAvatar({
-        public_id: login.avatar.public_id,
-        url: e.target.result,
-      });
       setLogin({
         ...login,
-        newAvatar: {
-          public_id: login.avatar.public_id,
+        avatar: {
+          public_id: '',
           url: e.target.result,
         },
       });
@@ -83,8 +77,6 @@ const Settings = () => {
     event.preventDefault();
     dispatch(updateUser(login));
   };
-
-  //console.log(login);
 
   if (isLoading) {
     return (
@@ -126,7 +118,7 @@ const Settings = () => {
 
                 <StyledAvatar>
                   {login.avatar !== '' ? (
-                    <Avatar alt={login.name} src={newAvatar.url} />
+                    <Avatar alt={login.name} src={login.avatar.url} />
                   ) : (
                     <AccountCircle />
                   )}
