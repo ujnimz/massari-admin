@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {Navigate, useNavigate} from 'react-router-dom';
-import {useSnackbar} from 'notistack';
 // MUI
 import {styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -60,20 +59,10 @@ const StyledLinkWrapper = styled('div')(({theme}) => ({
 const Register = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
-  const {enqueueSnackbar} = useSnackbar();
 
   const [login, setLogin] = useState({name: '', email: '', password: ''});
   const state = useSelector(state => state.userState);
-  const {isAuth, isLoading, error} = state;
-
-  useEffect(() => {
-    if (error) {
-      enqueueSnackbar(error.message, {variant: 'error'});
-    }
-    return () => {
-      //closeSnackbar(key);
-    };
-  }, [error, enqueueSnackbar]);
+  const {isAuth, isLoading} = state;
 
   const handleChange = event => {
     const name = event.target.name;
