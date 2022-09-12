@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import {toast} from 'react-toastify';
+
 // LOGIN A USER
 export const loginUser = createAsyncThunk(
   'users/loginUser',
@@ -109,7 +110,7 @@ export const authUser = createAsyncThunk(
 
       localStorage.setItem('isAuth', response.data.success);
       // Show Notification
-      toast.success('User has been authenticated.');
+      //toast.success('User has been authenticated.');
       return response.data.user;
     } catch ({response}) {
       localStorage.setItem('isAuth', false);

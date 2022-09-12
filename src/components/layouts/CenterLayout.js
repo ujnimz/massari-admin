@@ -1,5 +1,5 @@
 import React from 'react';
-import {styled, alpha} from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 
 const PageWrapper = styled('div')(({theme}) => ({
   display: 'flex',

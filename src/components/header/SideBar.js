@@ -32,14 +32,6 @@ const DrawerHeader = styled('div')(({theme}) => ({
   justifyContent: 'flex-end',
 }));
 
-const AdminMenu = ['Inbox', 'Starred', 'Send email', 'Drafts'];
-const AdminMenu2 = [
-  {title: 'Inbox', link: '', icon: ''},
-  'Starred',
-  'Send email',
-  'Drafts',
-];
-
 export default function PersistentDrawerLeft() {
   const dispatch = useDispatch();
   const theme = useTheme();

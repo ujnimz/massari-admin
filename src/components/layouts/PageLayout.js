@@ -42,7 +42,7 @@ const PageLayout = ({children}) => {
       <Main open={drawerOpen}>
         <Header />
         <StyledBox>{children}</StyledBox>
-        <Footer />
+        {/* <Footer /> */}
       </Main>
     </>
   );

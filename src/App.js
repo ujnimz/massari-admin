@@ -1,7 +1,8 @@
 import React, {useMemo, useEffect} from 'react';
-import {Routes, Route, Navigate} from 'react-router-dom';
+import {Routes, Route} from 'react-router-dom';
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PrivateRoutes from './utils/PrivateRoutes';
 // MUI
 import {ThemeProvider, createTheme} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,7 +13,9 @@ import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import NotFound from './pages/NotFound';
 import Settings from './pages/Settings';
-import PrivateRoutes from './utils/PrivateRoutes';
+import Products from './pages/Products';
+import SingleProduct from './pages/SingleProduct';
+
 // DATA
 import {useSelector, useDispatch} from 'react-redux';
 import {authUser} from './redux/slices/userSlice';
@@ -86,6 +89,8 @@ function App() {
           <Route element={<PrivateRoutes />}>
             <Route element={<Dashboard />} path='/' exact />
             <Route path='/settings' element={<Settings />} />
+            <Route path='/products' element={<Products />} />
+            <Route path='/products/:productId' element={<SingleProduct />} />
           </Route>
           <Route element={<Login />} path='/login' />
           <Route element={<Register />} path='/register' />

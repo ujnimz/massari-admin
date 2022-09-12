@@ -8,7 +8,7 @@ const StyledTypography = styled(Typography)(({theme}) => ({
 
 const MainTitle = ({title}) => {
   return (
-    <StyledTypography variant='h3' component='h1' gutterBottom>
+    <StyledTypography variant='h4' component='h1' gutterBottom>
       {title}
     </StyledTypography>
   );

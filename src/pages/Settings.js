@@ -47,7 +47,7 @@ const Settings = () => {
   const {isLoading, user} = useSelector(state => state.userState);
 
   useEffect(() => {
-    setLogin({...login, ...user});
+    setLogin(login => ({...login, ...user}));
     return () => {
       setLogin(null);
     };
