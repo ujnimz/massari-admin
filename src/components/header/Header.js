@@ -201,6 +201,7 @@ export default function Header() {
           </IconButton>
           <Logo to='/'>
             <Typography
+              fontWeight='bold'
               variant='h6'
               noWrap
               component='div'

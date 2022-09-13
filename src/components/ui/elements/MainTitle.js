@@ -2,13 +2,17 @@
 import {styled} from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-const StyledTypography = styled(Typography)(({theme}) => ({
+const StyledTypography = styled(Typography)(({theme, invert}) => ({
   fontWeight: theme.typography.fontWeightBold,
+  color:
+    invert === 'true'
+      ? theme.palette.background.default
+      : theme.palette.primary.contrastText,
 }));
 
-const MainTitle = ({title}) => {
+const MainTitle = ({title, invert = 'false'}) => {
   return (
-    <StyledTypography variant='h4' component='h1' gutterBottom>
+    <StyledTypography invert={invert} variant='h4' component='h1' gutterBottom>
       {title}
     </StyledTypography>
   );

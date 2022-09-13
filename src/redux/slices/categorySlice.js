@@ -2,9 +2,9 @@ import axios from 'axios';
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 //import {toast} from 'react-toastify';
 
-// GET THE PRODUCTS
-export const getProducts = createAsyncThunk(
-  'products/getProducts',
+// GET ALL THE CATEGORIES
+export const getAllCategories = createAsyncThunk(
+  'categories/getAllCategories',
   async (args, {rejectWithValue}) => {
     try {
       const config = {
@@ -13,18 +13,21 @@ export const getProducts = createAsyncThunk(
         },
       };
 
-      const response = await axios.get(`/api/v1/products/`, config);
+      const response = await axios.get(
+        `/api/v1/admin/products/categories/`,
+        config,
+      );
 
-      return response.data.products;
+      return response.data.categories;
     } catch ({response}) {
       return rejectWithValue({code: response.status, ...response.data});
     }
   },
 );
 
-// GET A PRODUCT
-export const getProduct = createAsyncThunk(
-  'products/getProduct',
+// GET A CATEGORY
+export const getCategory = createAsyncThunk(
+  'categories/getCategory',
   async (args, {rejectWithValue}) => {
     try {
       const config = {
@@ -42,9 +45,9 @@ export const getProduct = createAsyncThunk(
   },
 );
 
-// UPDATE A PRODUCT
-export const updateProduct = createAsyncThunk(
-  'products/updateProduct',
+// UPDATE A CATEGORY
+export const updateCategory = createAsyncThunk(
+  'categories/updateCategory',
   async (args, {rejectWithValue}) => {
     try {
       const {productId, productData} = args;
@@ -67,62 +70,62 @@ export const updateProduct = createAsyncThunk(
   },
 );
 
-const productSlice = createSlice({
-  name: 'products',
+const categorySlice = createSlice({
+  name: 'categories',
   initialState: {
-    products: null,
-    product: null,
+    allCategories: null,
+    category: null,
     error: null,
     isLoading: true,
   },
   extraReducers: builder => {
     builder
-      // GET THE PRODUCTS
-      .addCase(getProducts.pending, (state, action) => {
+      // GET ALL THE CATEGORIES
+      .addCase(getAllCategories.pending, (state, action) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(getProducts.fulfilled, (state, action) => {
-        state.products = action.payload;
+      .addCase(getAllCategories.fulfilled, (state, action) => {
+        state.allCategories = action.payload;
         state.error = null;
         state.isLoading = false;
       })
-      .addCase(getProducts.rejected, (state, action) => {
-        state.products = null;
+      .addCase(getAllCategories.rejected, (state, action) => {
+        state.allCategories = null;
         state.error = action.payload;
         state.isLoading = false;
       })
-      // GET A PRODUCTS
-      .addCase(getProduct.pending, (state, action) => {
+      // GET A CATEGORY
+      .addCase(getCategory.pending, (state, action) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(getProduct.fulfilled, (state, action) => {
-        state.product = action.payload;
+      .addCase(getCategory.fulfilled, (state, action) => {
+        state.category = action.payload;
         state.error = null;
         state.isLoading = false;
       })
-      .addCase(getProduct.rejected, (state, action) => {
-        state.products = null;
+      .addCase(getCategory.rejected, (state, action) => {
+        state.category = null;
         state.error = action.payload;
         state.isLoading = false;
       })
-      // UPDATE A PRODUCTS
-      .addCase(updateProduct.pending, (state, action) => {
+      // UPDATE A CATEGORY
+      .addCase(updateCategory.pending, (state, action) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(updateProduct.fulfilled, (state, action) => {
-        state.product = action.payload;
+      .addCase(updateCategory.fulfilled, (state, action) => {
+        state.category = action.payload;
         state.error = null;
         state.isLoading = false;
       })
-      .addCase(updateProduct.rejected, (state, action) => {
-        state.products = null;
+      .addCase(updateCategory.rejected, (state, action) => {
+        state.category = null;
         state.error = action.payload;
         state.isLoading = false;
       });
   },
 });
 
-export default productSlice.reducer;
+export default categorySlice.reducer;

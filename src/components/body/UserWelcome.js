@@ -23,9 +23,12 @@ const UserWelcome = () => {
   return (
     <StyledCard>
       <CardContent>
-        <MainTitle title={` Hi ${user.name},`} />
-        <SubTitle title='Welcome back to Massari Store Manager' />
-        <Body1Text text='Your dashboard has been improved! Explore new features like Notifications, Search, and more.' />
+        <MainTitle invert='true' title={` Hi ${user.name},`} />
+        <SubTitle invert='true' title='Welcome back to Massari Store Manager' />
+        <Body1Text
+          invert='true'
+          text='Your dashboard has been improved! Explore new features like Notifications, Search, and more.'
+        />
       </CardContent>
 
       <CardActions>

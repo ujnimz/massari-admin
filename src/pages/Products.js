@@ -40,7 +40,7 @@ const Products = () => {
         item.stock,
         item.price,
         item.ratings,
-        'Published',
+        item.status,
       ),
     );
   }

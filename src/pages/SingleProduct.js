@@ -4,16 +4,18 @@ import {useParams} from 'react-router-dom';
 import {styled} from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import Stack from '@mui/material/Stack';
-
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
 import IconButton from '@mui/material/IconButton';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import {Typography} from '@mui/material';
 // UI
 import PageLayout from '../components/layouts/PageLayout';
 import Loading from './Loading';
@@ -21,7 +23,7 @@ import MainTitle from '../components/ui/elements/MainTitle';
 // REDUX
 import {useDispatch, useSelector} from 'react-redux';
 import {getProduct, updateProduct} from '../redux/slices/productSlice';
-import {Typography} from '@mui/material';
+import {getAllCategories} from '../redux/slices/categorySlice';
 
 const StyledPaper = styled(Paper)(({theme}) => ({
   width: '100%',
@@ -69,11 +71,21 @@ const SingleProduct = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [stock, setStock] = useState('');
+  const [status, setStatus] = useState('');
   const [regularPrice, setRegularPrice] = useState('');
+  const [salePrice, setSalePrice] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [categoryChecked, setCategoryChecked] = useState([]);
   const [images, setImages] = useState([]);
   const [oldImages, setOldImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
-  const {isLoading, product} = useSelector(state => state.productState);
+
+  const {isLoading: isProductsLoading, product} = useSelector(
+    state => state.productState,
+  );
+  const {isLoading: isCategoriesLoading, allCategories} = useSelector(
+    state => state.categoryState,
+  );
 
   useEffect(() => {
     if (!product || product._id !== productId) {
@@ -82,7 +94,9 @@ const SingleProduct = () => {
       setName(product?.name);
       setDescription(product?.description);
       setRegularPrice(product?.price);
+      setCategories(product?.categories);
       setStock(product?.stock);
+      setStatus(product?.status);
       setOldImages(product?.images);
       setImagesPreview([]);
     }
@@ -90,10 +104,28 @@ const SingleProduct = () => {
       setName('');
       setDescription('');
       setRegularPrice('');
+      setCategories([]);
       setStock('');
+      setStatus('');
       setOldImages([]);
     };
   }, [productId, product, dispatch]);
+
+  useEffect(() => {
+    if (!allCategories) {
+      dispatch(getAllCategories());
+    }
+    // else {
+    //   setCategoryChecked(
+    //     allCategories.map(aCat =>
+    //       categories.some(cat => cat.category_id === aCat._id),
+    //     ),
+    //   );
+    // }
+    return () => {
+      //second();
+    };
+  }, [allCategories, categories, dispatch]);
 
   const updateProductImagesChange = e => {
     const files = Array.from(e.target.files);
@@ -118,13 +150,54 @@ const SingleProduct = () => {
     });
   };
 
-  const handleRemoveImage = index => {
-    const newArr = [...oldImages];
-    newArr.splice(index, 1);
-    console.log(newArr);
-    setImagesPreview(oldImages => [...oldImages, ...newArr]);
-    //setImages(oldImages => [...oldImages, ...newArr]);
-    //setImages(oldImages => oldImages.splice(index, 1));
+  // const handleRemoveImage = id => {
+  //   const newArr = [...oldImages];
+  //   var index = newArr
+  //     .map(x => {
+  //       return x._id;
+  //     })
+  //     .indexOf(id);
+
+  //   newArr.splice(index, 1);
+  //   console.log(newArr);
+  //   //setImagesPreview(oldImages => [...oldImages, ...newArr]);
+  //   setOldImages(newArr);
+  //   setImages(newArr);
+  // };
+
+  const handleStatusChange = () => {
+    setStatus(status => (status === 'Published' ? 'Draft' : 'Published'));
+  };
+
+  const handleCategoryChange = cate => {
+    //console.log(cate);
+    const {_id, name} = cate;
+
+    const isIn = isCategoryIn(_id);
+    if (isIn) {
+      let arrCopy = [...categories];
+      var index = arrCopy
+        .map(x => {
+          return x._id;
+        })
+        .indexOf(_id);
+      arrCopy.splice(index, 1);
+      setCategories(arrCopy);
+    } else {
+      setCategories([...categories, {category_id: _id, category_name: name}]);
+    }
+  };
+
+  console.log(categories);
+
+  const isCategoryIn = id => {
+    if (categories.length > 0) {
+      const found = categories.some(cat => cat.category_id === id);
+      return found;
+    } else {
+      return false;
+    }
+    //console.log(found);
   };
 
   const updateProductSubmitHandler = e => {
@@ -135,13 +208,14 @@ const SingleProduct = () => {
       price: regularPrice,
       description,
       stock,
+      categories,
       images,
     };
 
     dispatch(updateProduct({productId, productData}));
   };
 
-  if (isLoading) {
+  if (isProductsLoading) {
     return (
       <PageLayout>
         <Loading />
@@ -152,7 +226,7 @@ const SingleProduct = () => {
   return (
     <PageLayout>
       <Container maxWidth='lg'>
-        <MainTitle title={`Edit ${name}`} />
+        <MainTitle title={`Edit ${product?.name}`} />
 
         <Box
           component='form'
@@ -166,40 +240,79 @@ const SingleProduct = () => {
                 <SectionTitle variant='h6' gutterBottom>
                   Product Details
                 </SectionTitle>
-                <StyledTextInput
-                  id='outlined-name-input'
-                  label='Name'
-                  variant='outlined'
-                  name='name'
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                />
-                <StyledTextInput
-                  id='outlined-description-input'
-                  label='Description'
-                  variant='outlined'
-                  name='description'
-                  multiline
-                  rows={4}
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
-                />
-                <StyledTextInput
-                  id='outlined-name-input'
-                  label='Regular Price'
-                  variant='outlined'
-                  name='regularPrice'
-                  value={regularPrice}
-                  onChange={e => setRegularPrice(e.target.value)}
-                />
-                <StyledTextInput
-                  id='outlined-name-input'
-                  label='Stock'
-                  variant='outlined'
-                  name='stock'
-                  value={stock}
-                  onChange={e => setStock(e.target.value)}
-                />
+                <FormGroup>
+                  <StyledTextInput
+                    id='outlined-name-input'
+                    label='Name'
+                    variant='outlined'
+                    name='name'
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                  />
+                  <StyledTextInput
+                    id='outlined-description-input'
+                    label='Description'
+                    variant='outlined'
+                    name='description'
+                    multiline
+                    rows={4}
+                    value={description}
+                    onChange={e => setDescription(e.target.value)}
+                  />
+                  <StyledTextInput
+                    id='outlined-name-input'
+                    label='Regular Price'
+                    variant='outlined'
+                    name='regularPrice'
+                    value={regularPrice}
+                    onChange={e => setRegularPrice(e.target.value)}
+                  />
+                  <StyledTextInput
+                    id='outlined-name-input'
+                    label='Stock'
+                    variant='outlined'
+                    name='stock'
+                    value={stock}
+                    onChange={e => setStock(e.target.value)}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={status === 'Published'}
+                        onChange={handleStatusChange}
+                      />
+                    }
+                    label={status}
+                  />
+                </FormGroup>
+              </Grid>
+            </StyledPaper>
+
+            <StyledPaper>
+              <Grid xs={12}>
+                <SectionTitle variant='h6' gutterBottom>
+                  Product Categories
+                </SectionTitle>
+                {isCategoriesLoading ? (
+                  <span>loading...</span>
+                ) : (
+                  <FormGroup>
+                    {allCategories.map((cat, index) => (
+                      <FormControlLabel
+                        key={index}
+                        control={
+                          <Checkbox
+                            checked={isCategoryIn(cat._id)}
+                            onChange={() => handleCategoryChange(cat)}
+                            name={cat._id}
+                            inputProps={{'aria-label': 'controlled'}}
+                          />
+                        }
+                        label={cat.name}
+                      />
+                    ))}
+                  </FormGroup>
+                )}
               </Grid>
             </StyledPaper>
 
@@ -222,7 +335,7 @@ const SingleProduct = () => {
                           />
                           <IconButton
                             style={{position: 'absolute'}}
-                            onClick={() => handleRemoveImage(index)}
+                            //onClick={() => handleRemoveImage(item._id)}
                           >
                             <RemoveCircleIcon style={{color: 'red'}} />
                           </IconButton>
@@ -244,7 +357,12 @@ const SingleProduct = () => {
                             height={150}
                             style={{display: 'block'}}
                           />
-                          <RemoveCircleIcon />
+                          <IconButton
+                            style={{position: 'absolute'}}
+                            //onClick={() => handleRemoveImage(item._id)}
+                          >
+                            <RemoveCircleIcon style={{color: 'red'}} />
+                          </IconButton>
                         </ImageBox>
                       ))}
                     </Stack>
@@ -272,7 +390,7 @@ const SingleProduct = () => {
                 <StyledButton
                   type='submit'
                   variant='contained'
-                  disabled={isLoading}
+                  disabled={isProductsLoading}
                 >
                   Update
                 </StyledButton>

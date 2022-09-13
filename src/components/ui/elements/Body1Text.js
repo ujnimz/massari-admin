@@ -1,11 +1,19 @@
 // MUI
+import {styled} from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-const Body1Text = ({text}) => {
+const StyledTypography = styled(Typography)(({theme, invert}) => ({
+  color:
+    invert === 'true'
+      ? theme.palette.background.default
+      : theme.palette.primary.contrastText,
+}));
+
+const Body1Text = ({text, invert = 'false'}) => {
   return (
-    <Typography variant='body1' gutterBottom>
+    <StyledTypography invert={invert} variant='body1' gutterBottom>
       {text}
-    </Typography>
+    </StyledTypography>
   );
 };
 

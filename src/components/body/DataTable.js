@@ -1,9 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {Navigate} from 'react-router-dom';
 import {Link} from 'react-router-dom';
 // MUI
-import {alpha} from '@mui/material/styles';
+import {styled, alpha} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -21,6 +20,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import Chip from '@mui/material/Chip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
@@ -146,6 +146,14 @@ DataTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
+const EditLink = styled(Link)(({theme}) => ({
+  color: theme.palette.primary.main,
+}));
+const StyledStatus = styled(Typography)(({theme}) => ({
+  textTransform: 'uppercase',
+  lineHeight: 1,
+}));
+
 const DataTable = ({rows, headCells}) => {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('stock');
@@ -208,6 +216,35 @@ const DataTable = ({rows, headCells}) => {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
+  const getStatusChip = status => {
+    switch (status) {
+      case 'Published':
+        return (
+          <Chip
+            size='small'
+            label={<StyledStatus variant='caption'>{status}</StyledStatus>}
+            color='success'
+          />
+        );
+      case 'Draft':
+        return (
+          <Chip
+            size='small'
+            label={<StyledStatus variant='caption'>{status}</StyledStatus>}
+            color='warning'
+          />
+        );
+      default:
+        return (
+          <Chip
+            size='small'
+            label={<StyledStatus variant='caption'>{status}</StyledStatus>}
+            color='grey'
+          />
+        );
+    }
+  };
+
   return (
     <Box sx={{width: '100%'}}>
       <Paper sx={{width: '100%', mb: 2}}>
@@ -266,11 +303,11 @@ const DataTable = ({rows, headCells}) => {
                       <TableCell>{row.stock}</TableCell>
                       <TableCell>{row.price}</TableCell>
                       <TableCell>{row.ratings}</TableCell>
-                      <TableCell>{row.status}</TableCell>
+                      <TableCell>{getStatusChip(row.status)}</TableCell>
                       <TableCell align='right'>
-                        <Link to={row.id}>
+                        <EditLink to={row.id}>
                           <ModeEditIcon />
-                        </Link>
+                        </EditLink>
                       </TableCell>
                     </TableRow>
                   );
