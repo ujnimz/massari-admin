@@ -37,6 +37,7 @@ const Products = () => {
       createProductData(
         item._id,
         item.name,
+        item.sku,
         item.stock,
         item.price,
         item.ratings,

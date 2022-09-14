@@ -300,6 +300,7 @@ const DataTable = ({rows, headCells}) => {
                       >
                         {row.name}
                       </TableCell>
+                      <TableCell>{row.sku}</TableCell>
                       <TableCell>{row.stock}</TableCell>
                       <TableCell>{row.price}</TableCell>
                       <TableCell>{row.ratings}</TableCell>

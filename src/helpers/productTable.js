@@ -1,7 +1,16 @@
-export function createProductData(id, name, stock, price, ratings, status) {
+export function createProductData(
+  id,
+  name,
+  sku,
+  stock,
+  price,
+  ratings,
+  status,
+) {
   return {
     id,
     name,
+    sku,
     stock,
     price,
     ratings,
@@ -15,6 +24,12 @@ export const productsHeadCells = [
     align: 'left',
     disablePadding: true,
     label: 'Name',
+  },
+  {
+    id: 'sku',
+    align: 'left',
+    disablePadding: false,
+    label: 'SKU',
   },
   {
     id: 'stock',

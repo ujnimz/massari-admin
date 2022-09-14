@@ -68,17 +68,25 @@ const SingleProduct = () => {
   let {productId} = useParams();
   const dispatch = useDispatch();
 
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [stock, setStock] = useState('');
-  const [status, setStatus] = useState('');
-  const [regularPrice, setRegularPrice] = useState('');
-  const [salePrice, setSalePrice] = useState('');
+  const [name, setName] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [stock, setStock] = useState(null);
+  const [sku, setSku] = useState(null);
+  const [weight, setWeight] = useState(null);
+  const [length, setLength] = useState(null);
+  const [width, setWidth] = useState(null);
+  const [height, setHeight] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [soldIndividually, setSoldIndividually] = useState(false);
+  const [price, setPrice] = useState(null);
+  const [salePrice, setSalePrice] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [categoryChecked, setCategoryChecked] = useState([]);
   const [images, setImages] = useState([]);
   const [oldImages, setOldImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
+
+  const [seoTitle, setSeoTitle] = useState(null);
+  const [seoDescription, setSeoDescription] = useState(null);
 
   const {isLoading: isProductsLoading, product} = useSelector(
     state => state.productState,
@@ -93,21 +101,40 @@ const SingleProduct = () => {
     } else {
       setName(product?.name);
       setDescription(product?.description);
-      setRegularPrice(product?.price);
+      setPrice(product?.price);
+      setSalePrice(product?.salePrice);
       setCategories(product?.categories);
+      setSku(product?.sku);
       setStock(product?.stock);
+      setSoldIndividually(product?.soldIndividually);
+      setWeight(product?.weight);
+      setLength(product?.length);
+      setWidth(product?.width);
+      setHeight(product?.height);
       setStatus(product?.status);
       setOldImages(product?.images);
       setImagesPreview([]);
+      setSeoTitle(product?.seoTitle);
+      setSeoDescription(product?.seoDescription);
     }
     return () => {
-      setName('');
-      setDescription('');
-      setRegularPrice('');
+      setName(null);
+      setDescription(null);
+      setPrice(null);
+      setSalePrice(null);
       setCategories([]);
-      setStock('');
-      setStatus('');
+      setSku(null);
+      setStock(null);
+      setSoldIndividually(false);
+      setWeight(null);
+      setLength(null);
+      setWidth(null);
+      setHeight(null);
+      setStatus(null);
       setOldImages([]);
+      setImagesPreview([]);
+      setSeoTitle(null);
+      setSeoDescription(null);
     };
   }, [productId, product, dispatch]);
 
@@ -145,7 +172,6 @@ const SingleProduct = () => {
           setImages(oldImages => [...oldImages, reader.result]);
         }
       };
-      //console.log(images);
       reader.readAsDataURL(file);
     });
   };
@@ -169,16 +195,17 @@ const SingleProduct = () => {
     setStatus(status => (status === 'Published' ? 'Draft' : 'Published'));
   };
 
-  const handleCategoryChange = cate => {
-    //console.log(cate);
-    const {_id, name} = cate;
+  const handleSoldIndividuallyChange = () => {
+    setSoldIndividually(soldIndividually => !soldIndividually);
+  };
 
+  const handleCategoryChange = ({_id, name}) => {
     const isIn = isCategoryIn(_id);
     if (isIn) {
       let arrCopy = [...categories];
       var index = arrCopy
         .map(x => {
-          return x._id;
+          return x.category_id;
         })
         .indexOf(_id);
       arrCopy.splice(index, 1);
@@ -188,8 +215,6 @@ const SingleProduct = () => {
     }
   };
 
-  console.log(categories);
-
   const isCategoryIn = id => {
     if (categories.length > 0) {
       const found = categories.some(cat => cat.category_id === id);
@@ -197,19 +222,29 @@ const SingleProduct = () => {
     } else {
       return false;
     }
-    //console.log(found);
   };
 
+  // Submit and Save Data
   const updateProductSubmitHandler = e => {
     e.preventDefault();
 
     const productData = {
       name,
-      price: regularPrice,
+      price,
+      salePrice,
       description,
       stock,
+      status,
+      sku,
+      soldIndividually,
+      weight,
+      length,
+      width,
+      height,
       categories,
       images,
+      seoTitle,
+      seoDescription,
     };
 
     dispatch(updateProduct({productId, productData}));
@@ -238,7 +273,7 @@ const SingleProduct = () => {
             <StyledPaper>
               <Grid xs={12}>
                 <SectionTitle variant='h6' gutterBottom>
-                  Product Details
+                  General Details
                 </SectionTitle>
                 <FormGroup>
                   <StyledTextInput
@@ -246,8 +281,9 @@ const SingleProduct = () => {
                     label='Name'
                     variant='outlined'
                     name='name'
-                    value={name}
+                    value={name ? name : ''}
                     onChange={e => setName(e.target.value)}
+                    required
                   />
                   <StyledTextInput
                     id='outlined-description-input'
@@ -256,24 +292,25 @@ const SingleProduct = () => {
                     name='description'
                     multiline
                     rows={4}
-                    value={description}
+                    value={description ? description : ''}
                     onChange={e => setDescription(e.target.value)}
                   />
                   <StyledTextInput
                     id='outlined-name-input'
                     label='Regular Price'
                     variant='outlined'
-                    name='regularPrice'
-                    value={regularPrice}
-                    onChange={e => setRegularPrice(e.target.value)}
+                    name='price'
+                    value={price ? price : ''}
+                    onChange={e => setPrice(e.target.value)}
+                    required
                   />
                   <StyledTextInput
                     id='outlined-name-input'
-                    label='Stock'
+                    label='Sale Price'
                     variant='outlined'
-                    name='stock'
-                    value={stock}
-                    onChange={e => setStock(e.target.value)}
+                    name='salePrice'
+                    value={salePrice ? salePrice : ''}
+                    onChange={e => setSalePrice(e.target.value)}
                   />
                   <FormControlLabel
                     control={
@@ -284,6 +321,99 @@ const SingleProduct = () => {
                     }
                     label={status}
                   />
+                </FormGroup>
+              </Grid>
+            </StyledPaper>
+
+            <StyledPaper>
+              <Grid xs={12}>
+                <SectionTitle variant='h6' gutterBottom>
+                  Inventory
+                </SectionTitle>
+                <FormGroup>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <StyledTextInput
+                        id='outlined-sku-input'
+                        label='SKU'
+                        variant='outlined'
+                        name='sku'
+                        value={sku ? sku : ''}
+                        onChange={e => setSku(e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <StyledTextInput
+                        id='outlined-stock-input'
+                        label='Stock'
+                        variant='outlined'
+                        name='stock'
+                        value={stock ? stock : ''}
+                        onChange={e => setStock(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                  </Grid>
+
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={soldIndividually}
+                        onChange={handleSoldIndividuallyChange}
+                      />
+                    }
+                    label='Sold individually'
+                  />
+                </FormGroup>
+              </Grid>
+            </StyledPaper>
+
+            <StyledPaper>
+              <Grid xs={12}>
+                <SectionTitle variant='h6' gutterBottom>
+                  Shipping
+                </SectionTitle>
+                <FormGroup>
+                  <StyledTextInput
+                    id='outlined-weight-input'
+                    label='Weight (kg)'
+                    variant='outlined'
+                    name='weight'
+                    value={weight ? weight : ''}
+                    onChange={e => setWeight(e.target.value)}
+                  />
+                  <Grid container spacing={2}>
+                    <Grid item xs={4}>
+                      <StyledTextInput
+                        id='outlined-length-input'
+                        label='Length (cm)'
+                        variant='outlined'
+                        name='length'
+                        value={length ? length : ''}
+                        onChange={e => setLength(e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={4}>
+                      <StyledTextInput
+                        id='outlined-width-input'
+                        label='Width (cm)'
+                        variant='outlined'
+                        name='width'
+                        value={width ? width : ''}
+                        onChange={e => setWidth(e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={4}>
+                      <StyledTextInput
+                        id='outlined-height-input'
+                        label='Height (cm)'
+                        variant='outlined'
+                        name='height'
+                        value={height ? height : ''}
+                        onChange={e => setHeight(e.target.value)}
+                      />
+                    </Grid>
+                  </Grid>
                 </FormGroup>
               </Grid>
             </StyledPaper>
@@ -382,6 +512,34 @@ const SingleProduct = () => {
                     hidden
                   />
                 </UploadButton>
+              </Grid>
+            </StyledPaper>
+
+            <StyledPaper>
+              <Grid xs={12}>
+                <SectionTitle variant='h6' gutterBottom>
+                  SEO Meta
+                </SectionTitle>
+                <FormGroup>
+                  <StyledTextInput
+                    id='outlined-seo-title-input'
+                    label='SEO title'
+                    variant='outlined'
+                    name='seoTitle'
+                    value={seoTitle ? seoTitle : ''}
+                    onChange={e => setSeoTitle(e.target.value)}
+                  />
+                  <StyledTextInput
+                    id='outlined-seo-description-input'
+                    label='SEO Description'
+                    variant='outlined'
+                    name='seoDescription'
+                    multiline
+                    rows={4}
+                    value={seoDescription ? seoDescription : ''}
+                    onChange={e => setSeoDescription(e.target.value)}
+                  />
+                </FormGroup>
               </Grid>
             </StyledPaper>
 
