@@ -1,13 +1,13 @@
 import {useEffect} from 'react';
 // UI
-import PageLayout from '../components/layouts/PageLayout';
-import Loading from './Loading';
-import DataTable from '../components/body/DataTable';
+import Loading from '../Loading';
+import PageLayout from '../../components/layouts/PageLayout';
+import DataTable from '../../components/body/DataTable';
 // HELPERS
-import {productsHeadCells, createProductData} from '../helpers/productTable';
+import {productsHeadCells, createProductData} from '../../helpers/productTable';
 // REDUX
 import {useDispatch, useSelector} from 'react-redux';
-import {getProducts} from '../redux/slices/productSlice';
+import {getProducts} from '../../redux/slices/productSlice';
 
 const Products = () => {
   const dispatch = useDispatch();

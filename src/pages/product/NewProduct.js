@@ -1,34 +1,37 @@
 import {useState, useEffect} from 'react';
-import {useParams} from 'react-router-dom';
 // MUI
 import {styled} from '@mui/material/styles';
+import {Typography} from '@mui/material';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
-import Stack from '@mui/material/Stack';
 import FormGroup from '@mui/material/FormGroup';
+import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Checkbox from '@mui/material/Checkbox';
-import Paper from '@mui/material/Paper';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import {Typography} from '@mui/material';
 // UI
-import PageLayout from '../components/layouts/PageLayout';
-import Loading from './Loading';
-import MainTitle from '../components/ui/elements/MainTitle';
+import PageLayout from '../../components/layouts/PageLayout';
+import MainTitle from '../../components/ui/elements/MainTitle';
 // REDUX
 import {useDispatch, useSelector} from 'react-redux';
-import {getProduct, updateProduct} from '../redux/slices/productSlice';
-import {getAllCategories} from '../redux/slices/categorySlice';
+import {addProduct} from '../../redux/slices/productSlice';
+import {getAllCategories} from '../../redux/slices/categorySlice';
 
+// STYLES
 const StyledPaper = styled(Paper)(({theme}) => ({
   width: '100%',
   padding: theme.spacing(4),
   marginBottom: theme.spacing(5),
+}));
+const SectionTitle = styled(Typography)(({theme}) => ({
+  marginBottom: theme.spacing(3),
+  fontWeight: theme.typography.fontWeightBold,
 }));
 const StyledTextInput = styled(TextField)(({theme}) => ({
   width: '100%',
@@ -40,19 +43,11 @@ const StyledButton = styled(Button)(({theme}) => ({
   fontWeight: 800,
   lineHeight: 3,
 }));
-const UploadButton = styled(Button)(({theme}) => ({
-  marginBottom: theme.spacing(5),
-  fontWeight: 800,
-}));
 const StyledAvatar = styled('div')(({theme}) => ({
   marginBottom: theme.spacing(5),
   padding: theme.spacing(2),
   backgroundColor: theme.palette.background.default,
   borderRadius: theme.spacing(1),
-}));
-const SectionTitle = styled(Typography)(({theme}) => ({
-  marginBottom: theme.spacing(3),
-  fontWeight: theme.typography.fontWeightBold,
 }));
 const ImageBox = styled('div')(({theme}) => ({
   position: 'relative',
@@ -63,9 +58,12 @@ const ImageBoxImg = styled('img')(({theme}) => ({
   position: 'absolute',
   display: 'block',
 }));
+const UploadButton = styled(Button)(({theme}) => ({
+  marginBottom: theme.spacing(5),
+  fontWeight: 800,
+}));
 
-const SingleProduct = () => {
-  let {productId} = useParams();
+const NewProduct = () => {
   const dispatch = useDispatch();
 
   const [name, setName] = useState(null);
@@ -82,123 +80,39 @@ const SingleProduct = () => {
   const [salePrice, setSalePrice] = useState(null);
   const [categories, setCategories] = useState([]);
   const [images, setImages] = useState([]);
-  const [oldImages, setOldImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
 
   const [seoTitle, setSeoTitle] = useState(null);
   const [seoDescription, setSeoDescription] = useState(null);
 
-  const {isLoading: isProductsLoading, product} = useSelector(
+  const {isLoading: isProductsLoading} = useSelector(
     state => state.productState,
   );
+  // Get all the categories
   const {isLoading: isCategoriesLoading, allCategories} = useSelector(
     state => state.categoryState,
   );
 
   useEffect(() => {
-    if (!product || product._id !== productId) {
-      dispatch(getProduct(productId));
-    } else {
-      setName(product?.name);
-      setDescription(product?.description);
-      setPrice(product?.price);
-      setSalePrice(product?.salePrice);
-      setCategories(product?.categories);
-      setSku(product?.sku);
-      setStock(product?.stock);
-      setSoldIndividually(product?.soldIndividually);
-      setWeight(product?.weight);
-      setLength(product?.length);
-      setWidth(product?.width);
-      setHeight(product?.height);
-      setStatus(product?.status);
-      setOldImages(product?.images);
-      setImagesPreview([]);
-      setSeoTitle(product?.seoTitle);
-      setSeoDescription(product?.seoDescription);
-    }
-    return () => {
-      setName(null);
-      setDescription(null);
-      setPrice(null);
-      setSalePrice(null);
-      setCategories([]);
-      setSku(null);
-      setStock(null);
-      setSoldIndividually(false);
-      setWeight(null);
-      setLength(null);
-      setWidth(null);
-      setHeight(null);
-      setStatus(null);
-      setOldImages([]);
-      setImagesPreview([]);
-      setSeoTitle(null);
-      setSeoDescription(null);
-    };
-  }, [productId, product, dispatch]);
-
-  useEffect(() => {
     if (!allCategories) {
       dispatch(getAllCategories());
     }
-    // else {
-    //   setCategoryChecked(
-    //     allCategories.map(aCat =>
-    //       categories.some(cat => cat.category_id === aCat._id),
-    //     ),
-    //   );
-    // }
     return () => {
       //second();
     };
-  }, [allCategories, categories, dispatch]);
+  }, [allCategories, dispatch]);
 
-  const updateProductImagesChange = e => {
-    const files = Array.from(e.target.files);
-
-    if (imagesPreview.length <= 0) {
-      setImages([]);
-      setImagesPreview([]);
-    }
-    setOldImages([]);
-
-    files.forEach(file => {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setImagesPreview(oldImages => [...oldImages, reader.result]);
-          setImages(oldImages => [...oldImages, reader.result]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  // const handleRemoveImage = id => {
-  //   const newArr = [...oldImages];
-  //   var index = newArr
-  //     .map(x => {
-  //       return x._id;
-  //     })
-  //     .indexOf(id);
-
-  //   newArr.splice(index, 1);
-  //   console.log(newArr);
-  //   //setImagesPreview(oldImages => [...oldImages, ...newArr]);
-  //   setOldImages(newArr);
-  //   setImages(newArr);
-  // };
-
+  // Handle product status change switch
   const handleStatusChange = () => {
     setStatus(status => (status === 'Published' ? 'Draft' : 'Published'));
   };
 
+  // Handle product sold individually change switch
   const handleSoldIndividuallyChange = () => {
     setSoldIndividually(soldIndividually => !soldIndividually);
   };
 
+  // Handle product category check boxes
   const handleCategoryChange = ({_id, name}) => {
     const isIn = isCategoryIn(_id);
     if (isIn) {
@@ -215,6 +129,7 @@ const SingleProduct = () => {
     }
   };
 
+  // check if the category is in the product categories
   const isCategoryIn = id => {
     if (categories.length > 0) {
       const found = categories.some(cat => cat.category_id === id);
@@ -222,6 +137,42 @@ const SingleProduct = () => {
     } else {
       return false;
     }
+  };
+
+  // Handle product images input
+  const handleProductImagesChange = e => {
+    const files = Array.from(e.target.files);
+
+    if (imagesPreview.length <= 0) {
+      setImages([]);
+      setImagesPreview([]);
+    }
+
+    files.forEach(file => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setImagesPreview(oldImages => [...oldImages, reader.result]);
+          setImages(oldImages => [...oldImages, reader.result]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Handle individual image remove
+  const handleRemoveImage = id => {
+    const newArr = [...imagesPreview];
+    var index = newArr
+      .map(x => {
+        return x._id;
+      })
+      .indexOf(id);
+
+    newArr.splice(index, 1);
+    setImagesPreview(newArr);
+    setImages(newArr);
   };
 
   // Submit and Save Data
@@ -247,21 +198,13 @@ const SingleProduct = () => {
       seoDescription,
     };
 
-    dispatch(updateProduct({productId, productData}));
+    dispatch(addProduct({productData}));
   };
-
-  if (isProductsLoading) {
-    return (
-      <PageLayout>
-        <Loading />
-      </PageLayout>
-    );
-  }
 
   return (
     <PageLayout>
       <Container maxWidth='lg'>
-        <MainTitle title={`Edit ${product?.name}`} />
+        <MainTitle title='Add New Product' />
 
         <Box
           component='form'
@@ -275,6 +218,7 @@ const SingleProduct = () => {
                 <SectionTitle variant='h6' gutterBottom>
                   General Details
                 </SectionTitle>
+
                 <FormGroup>
                   <StyledTextInput
                     id='outlined-name-input'
@@ -452,29 +396,6 @@ const SingleProduct = () => {
                   Product Images
                 </SectionTitle>
                 <StyledAvatar>
-                  {oldImages?.length ? (
-                    <Stack direction='row' spacing={2}>
-                      {oldImages.map((item, index) => (
-                        <ImageBox key={index}>
-                          <ImageBoxImg
-                            src={item.url}
-                            alt={item.public_id}
-                            loading='lazy'
-                            width={150}
-                            height={150}
-                          />
-                          <IconButton
-                            style={{position: 'absolute'}}
-                            //onClick={() => handleRemoveImage(item._id)}
-                          >
-                            <RemoveCircleIcon style={{color: 'red'}} />
-                          </IconButton>
-                        </ImageBox>
-                      ))}
-                    </Stack>
-                  ) : (
-                    ''
-                  )}
                   {imagesPreview?.length ? (
                     <Stack direction='row' spacing={2}>
                       {imagesPreview.map((item, index) => (
@@ -489,7 +410,7 @@ const SingleProduct = () => {
                           />
                           <IconButton
                             style={{position: 'absolute'}}
-                            //onClick={() => handleRemoveImage(item._id)}
+                            onClick={() => handleRemoveImage(item._id)}
                           >
                             <RemoveCircleIcon style={{color: 'red'}} />
                           </IconButton>
@@ -507,7 +428,7 @@ const SingleProduct = () => {
                     accept='image/*'
                     type='file'
                     name='images'
-                    onChange={updateProductImagesChange}
+                    onChange={handleProductImagesChange}
                     multiple
                     hidden
                   />
@@ -550,7 +471,7 @@ const SingleProduct = () => {
                   variant='contained'
                   disabled={isProductsLoading}
                 >
-                  Update
+                  Submit
                 </StyledButton>
               </Grid>
             </StyledPaper>
@@ -561,4 +482,4 @@ const SingleProduct = () => {
   );
 };
 
-export default SingleProduct;
+export default NewProduct;

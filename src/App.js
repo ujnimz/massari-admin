@@ -13,8 +13,9 @@ import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import NotFound from './pages/NotFound';
 import Settings from './pages/Settings';
-import Products from './pages/Products';
-import SingleProduct from './pages/SingleProduct';
+import Products from './pages/product/Products';
+import SingleProduct from './pages/product/SingleProduct';
+import NewProduct from './pages/product/NewProduct';
 
 // DATA
 import {useSelector, useDispatch} from 'react-redux';
@@ -90,6 +91,7 @@ function App() {
             <Route element={<Dashboard />} path='/' exact />
             <Route path='/settings' element={<Settings />} />
             <Route path='/products' element={<Products />} />
+            <Route path='/products/new' element={<NewProduct />} />
             <Route path='/products/:productId' element={<SingleProduct />} />
           </Route>
           <Route element={<Login />} path='/login' />

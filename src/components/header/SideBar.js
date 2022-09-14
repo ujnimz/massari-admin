@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {Link} from 'react-router-dom';
 // MUI
 import {styled, useTheme} from '@mui/material/styles';
@@ -17,6 +18,11 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import GroupIcon from '@mui/icons-material/Group';
+import Collapse from '@mui/material/Collapse';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import StarBorder from '@mui/icons-material/StarBorder';
+
 // REDUX
 import {useSelector, useDispatch} from 'react-redux';
 import {switchDrawer} from '../../redux/slices/themeSlice';
@@ -38,6 +44,11 @@ export default function PersistentDrawerLeft() {
   const theme = useTheme();
 
   const {drawerOpen} = useSelector(state => state.themeState);
+  const [open, setOpen] = useState(true);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
 
   const handleDrawer = () => {
     dispatch(switchDrawer());
@@ -77,14 +88,23 @@ export default function PersistentDrawerLeft() {
           </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to='/products'>
-            <ListItemIcon>
-              <LocalMallIcon />
-            </ListItemIcon>
-            <ListItemText primary='Products' />
-          </ListItemButton>
-        </ListItem>
+        <ListItemButton onClick={handleClick}>
+          <ListItemIcon>
+            <LocalMallIcon />
+          </ListItemIcon>
+          <ListItemText primary='Products' />
+          {open ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={open} timeout='auto' unmountOnExit>
+          <List component='div' disablePadding>
+            <ListItemButton sx={{pl: 9}} component={Link} to='/products'>
+              <ListItemText primary='All Products' />
+            </ListItemButton>
+            <ListItemButton sx={{pl: 9}} component={Link} to='/products/new'>
+              <ListItemText primary='Create New' />
+            </ListItemButton>
+          </List>
+        </Collapse>
 
         <ListItem disablePadding>
           <ListItemButton component={Link} to='/orders'>
