@@ -1,7 +1,8 @@
 import {useState, useEffect} from 'react';
-import {useParams} from 'react-router-dom';
+import {useParams, Navigate} from 'react-router-dom';
 // MUI
 import {styled} from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import Stack from '@mui/material/Stack';
 import FormGroup from '@mui/material/FormGroup';
@@ -13,16 +14,24 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import IconButton from '@mui/material/IconButton';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import {Typography} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 // UI
 import PageLayout from '../../components/layouts/PageLayout';
 import Loading from '../Loading';
 import MainTitle from '../../components/ui/elements/MainTitle';
+import ConfirmDialog from '../../components/ui/elements/ConfirmDialog';
+
 // REDUX
 import {useDispatch, useSelector} from 'react-redux';
-import {getProduct, updateProduct} from '../../redux/slices/productSlice';
+import {
+  getProduct,
+  updateProduct,
+  deleteProduct,
+  resetSuccess,
+} from '../../redux/slices/productSlice';
 import {getAllCategories} from '../../redux/slices/categorySlice';
 // STYLES
 const StyledPaper = styled(Paper)(({theme}) => ({
@@ -35,7 +44,7 @@ const StyledTextInput = styled(TextField)(({theme}) => ({
   marginBottom: theme.spacing(3),
   fontWeight: 800,
 }));
-const StyledButton = styled(Button)(({theme}) => ({
+const StyledButton = styled(LoadingButton)(({theme}) => ({
   width: '100%',
   fontWeight: 800,
   lineHeight: 3,
@@ -68,6 +77,9 @@ const SingleProduct = () => {
   let {productId} = useParams();
   const dispatch = useDispatch();
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
+
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [stock, setStock] = useState(null);
@@ -76,7 +88,7 @@ const SingleProduct = () => {
   const [length, setLength] = useState(null);
   const [width, setWidth] = useState(null);
   const [height, setHeight] = useState(null);
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState('Published');
   const [soldIndividually, setSoldIndividually] = useState(false);
   const [price, setPrice] = useState(null);
   const [salePrice, setSalePrice] = useState(null);
@@ -88,9 +100,11 @@ const SingleProduct = () => {
   const [seoTitle, setSeoTitle] = useState(null);
   const [seoDescription, setSeoDescription] = useState(null);
 
-  const {isLoading: isProductsLoading, product} = useSelector(
-    state => state.productState,
-  );
+  const {
+    isLoading: isProductsLoading,
+    isSaving,
+    product,
+  } = useSelector(state => state.productState);
   const {isLoading: isCategoriesLoading, allCategories} = useSelector(
     state => state.categoryState,
   );
@@ -135,6 +149,8 @@ const SingleProduct = () => {
       setImagesPreview([]);
       setSeoTitle(null);
       setSeoDescription(null);
+
+      dispatch(resetSuccess());
     };
   }, [productId, product, dispatch]);
 
@@ -247,12 +263,25 @@ const SingleProduct = () => {
     dispatch(updateProduct({productId, productData}));
   };
 
+  const handleDialog = () => {
+    setDialogOpen(!dialogOpen);
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteProduct({productId}));
+    setDialogOpen(!dialogOpen);
+  };
+
   if (isProductsLoading) {
     return (
       <PageLayout>
         <Loading />
       </PageLayout>
     );
+  }
+
+  if (isSubmitSuccess) {
+    return <Navigate to={`/products`} />;
   }
 
   return (
@@ -541,19 +570,40 @@ const SingleProduct = () => {
             </StyledPaper>
 
             <StyledPaper>
-              <Grid xs={12}>
-                <StyledButton
-                  type='submit'
-                  variant='contained'
-                  disabled={isProductsLoading}
-                >
-                  Update
-                </StyledButton>
+              <Grid container spacing={2}>
+                <Grid xs={10}>
+                  <StyledButton
+                    type='submit'
+                    variant='contained'
+                    disabled={isProductsLoading}
+                    loading={isSaving}
+                  >
+                    {isSaving ? 'Saving...' : 'Save'}
+                  </StyledButton>
+                </Grid>
+                <Grid xs={2}>
+                  <StyledButton
+                    startIcon={<DeleteIcon />}
+                    color='error'
+                    variant='contained'
+                    disabled={isProductsLoading}
+                    onClick={handleDialog}
+                  >
+                    Delete
+                  </StyledButton>
+                </Grid>
               </Grid>
             </StyledPaper>
           </Grid>
         </Box>
       </Container>
+      <ConfirmDialog
+        isOpen={dialogOpen}
+        message={`Delete Product`}
+        description={`Do you really want to delete the product ${name}? This action cannot be undone.`}
+        handleClose={handleDialog}
+        handleDelete={handleDelete}
+      />
     </PageLayout>
   );
 };

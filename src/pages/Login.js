@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Navigate} from 'react-router-dom';
-
 // MUI
 import {styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';

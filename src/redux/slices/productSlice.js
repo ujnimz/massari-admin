@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-//import {toast} from 'react-toastify';
+import {toast} from 'react-toastify';
 
 // GET THE PRODUCTS
 export const getProducts = createAsyncThunk(
@@ -80,11 +80,12 @@ export const addProduct = createAsyncThunk(
         },
       };
 
-      const {data} = await axios.put(
+      const {data} = await axios.post(
         `/api/v1/admin/product/new`,
         productData,
         config,
       );
+
       return data.product;
     } catch ({response}) {
       return rejectWithValue({code: response.status, ...response.data});
@@ -92,13 +93,57 @@ export const addProduct = createAsyncThunk(
   },
 );
 
+// DELETE A PRODUCT
+export const deleteProduct = createAsyncThunk(
+  'products/deleteProduct',
+  async (args, {rejectWithValue}) => {
+    try {
+      const {productId} = args;
+
+      const config = {
+        headers: {
+          withCredentials: true,
+        },
+      };
+
+      const {data} = await axios.delete(
+        `/api/v1/admin/product/${productId}`,
+        config,
+      );
+
+      // Show Notification
+      toast.success('The product has been deleted.');
+
+      return data.product;
+    } catch ({response}) {
+      return rejectWithValue({code: response.status, ...response.data});
+    }
+  },
+);
+
+const initialState = {
+  products: null,
+  product: null,
+  success: false,
+  error: null,
+  isLoading: true,
+  isSaving: false,
+};
 const productSlice = createSlice({
   name: 'products',
-  initialState: {
-    products: null,
-    product: null,
-    error: null,
-    isLoading: true,
+  initialState,
+  reducers: {
+    resetProductState() {
+      return {
+        ...initialState,
+      };
+    },
+    resetSuccess(state) {
+      return {
+        ...state,
+        success: false,
+      };
+    },
   },
   extraReducers: builder => {
     builder
@@ -108,6 +153,7 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(getProducts.fulfilled, (state, action) => {
+        state.success = true;
         state.products = action.payload;
         state.error = null;
         state.isLoading = false;
@@ -123,6 +169,7 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(getProduct.fulfilled, (state, action) => {
+        state.success = true;
         state.product = action.payload;
         state.error = null;
         state.isLoading = false;
@@ -134,35 +181,52 @@ const productSlice = createSlice({
       })
       // UPDATE A PRODUCTS
       .addCase(updateProduct.pending, (state, action) => {
-        state.isLoading = true;
+        state.isSaving = true;
         state.error = null;
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
+        state.success = true;
         state.product = action.payload;
         state.error = null;
-        state.isLoading = false;
+        state.isSaving = false;
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.products = null;
         state.error = action.payload;
-        state.isLoading = false;
+        state.isSaving = false;
       })
       // ADD A PRODUCTS
       .addCase(addProduct.pending, (state, action) => {
-        state.isLoading = true;
+        state.isSaving = true;
         state.error = null;
       })
       .addCase(addProduct.fulfilled, (state, action) => {
+        state.success = true;
         state.product = action.payload;
         state.error = null;
-        state.isLoading = false;
+        state.isSaving = false;
       })
-      .addCase(updateProduct.rejected, (state, action) => {
-        state.products = null;
+      .addCase(addProduct.rejected, (state, action) => {
+        state.product = null;
         state.error = action.payload;
-        state.isLoading = false;
+        state.isSaving = false;
+      })
+      // DELETE A PRODUCTS
+      .addCase(deleteProduct.pending, (state, action) => {
+        state.isSaving = true;
+        state.error = null;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.success = true;
+        state.product = null;
+        state.error = null;
+        state.isSaving = false;
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isSaving = false;
       });
   },
 });
-
+export const {resetProductState, resetSuccess} = productSlice.actions;
 export default productSlice.reducer;

@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react';
+import {Navigate} from 'react-router-dom';
 // MUI
 import {styled} from '@mui/material/styles';
 import {Typography} from '@mui/material';
@@ -12,6 +13,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
+
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
@@ -38,7 +41,7 @@ const StyledTextInput = styled(TextField)(({theme}) => ({
   marginBottom: theme.spacing(3),
   fontWeight: 800,
 }));
-const StyledButton = styled(Button)(({theme}) => ({
+const StyledButton = styled(LoadingButton)(({theme}) => ({
   width: '100%',
   fontWeight: 800,
   lineHeight: 3,
@@ -66,6 +69,7 @@ const UploadButton = styled(Button)(({theme}) => ({
 const NewProduct = () => {
   const dispatch = useDispatch();
 
+  const [submitted, setSubmitted] = useState(false);
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [stock, setStock] = useState(null);
@@ -74,7 +78,7 @@ const NewProduct = () => {
   const [length, setLength] = useState(null);
   const [width, setWidth] = useState(null);
   const [height, setHeight] = useState(null);
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState('Published');
   const [soldIndividually, setSoldIndividually] = useState(false);
   const [price, setPrice] = useState(null);
   const [salePrice, setSalePrice] = useState(null);
@@ -85,7 +89,7 @@ const NewProduct = () => {
   const [seoTitle, setSeoTitle] = useState(null);
   const [seoDescription, setSeoDescription] = useState(null);
 
-  const {isLoading: isProductsLoading} = useSelector(
+  const {isLoading: isProductsLoading, product} = useSelector(
     state => state.productState,
   );
   // Get all the categories
@@ -175,10 +179,13 @@ const NewProduct = () => {
     setImages(newArr);
   };
 
+  const isReadyToSubmit = () => {
+    return !(name && price && sku && stock);
+  };
+
   // Submit and Save Data
   const updateProductSubmitHandler = e => {
     e.preventDefault();
-
     const productData = {
       name,
       price,
@@ -199,7 +206,12 @@ const NewProduct = () => {
     };
 
     dispatch(addProduct({productData}));
+    setSubmitted(true);
   };
+
+  if (submitted && product) {
+    return <Navigate to={`/products/${product._id}`} />;
+  }
 
   return (
     <PageLayout>
@@ -467,9 +479,10 @@ const NewProduct = () => {
             <StyledPaper>
               <Grid xs={12}>
                 <StyledButton
+                  loading={isProductsLoading}
                   type='submit'
                   variant='contained'
-                  disabled={isProductsLoading}
+                  disabled={isReadyToSubmit()}
                 >
                   Submit
                 </StyledButton>

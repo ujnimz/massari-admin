@@ -238,7 +238,7 @@ const DataTable = ({rows, headCells}) => {
         return (
           <Chip
             size='small'
-            label={<StyledStatus variant='caption'>{status}</StyledStatus>}
+            label={<StyledStatus variant='caption'>No Status</StyledStatus>}
             color='grey'
           />
         );
@@ -280,7 +280,7 @@ const DataTable = ({rows, headCells}) => {
                       role='checkbox'
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding='checkbox'>
@@ -306,7 +306,7 @@ const DataTable = ({rows, headCells}) => {
                       <TableCell>{row.ratings}</TableCell>
                       <TableCell>{getStatusChip(row.status)}</TableCell>
                       <TableCell align='right'>
-                        <EditLink to={row.id}>
+                        <EditLink to={`/products/${row.id}`}>
                           <ModeEditIcon />
                         </EditLink>
                       </TableCell>
@@ -326,7 +326,7 @@ const DataTable = ({rows, headCells}) => {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 20]}
           component='div'
           count={rows.length}
           rowsPerPage={rowsPerPage}
