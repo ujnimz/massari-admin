@@ -60,6 +60,16 @@ export const updateProduct = createAsyncThunk(
         productData,
         config,
       );
+
+      // Show Notification
+      toast.success('The product has been updated successfully.');
+
+      // Scroll to window top after saving
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+
       return data.product;
     } catch ({response}) {
       return rejectWithValue({code: response.status, ...response.data});
@@ -85,6 +95,15 @@ export const addProduct = createAsyncThunk(
         productData,
         config,
       );
+
+      // Show Notification
+      toast.success('The product has been added successfully.');
+
+      // Scroll to window top after saving
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
 
       return data.product;
     } catch ({response}) {
@@ -112,7 +131,7 @@ export const deleteProduct = createAsyncThunk(
       );
 
       // Show Notification
-      toast.success('The product has been deleted.');
+      toast.success('The product has been deleted successfully.');
 
       return data.product;
     } catch ({response}) {
@@ -126,8 +145,9 @@ const initialState = {
   product: null,
   success: false,
   error: null,
-  isLoading: true,
+  isLoading: false,
   isSaving: false,
+  isDeleting: false,
 };
 const productSlice = createSlice({
   name: 'products',
@@ -213,18 +233,18 @@ const productSlice = createSlice({
       })
       // DELETE A PRODUCTS
       .addCase(deleteProduct.pending, (state, action) => {
-        state.isSaving = true;
+        state.isDeleting = true;
         state.error = null;
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.success = true;
         state.product = null;
         state.error = null;
-        state.isSaving = false;
+        state.isDeleting = false;
       })
       .addCase(deleteProduct.rejected, (state, action) => {
         state.error = action.payload;
-        state.isSaving = false;
+        state.isDeleting = false;
       });
   },
 });

@@ -1,5 +1,5 @@
-import {useState} from 'react';
 import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -7,6 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 export default function ConfirmDialog({
+  loading,
   isOpen,
   message = '',
   description = '',
@@ -36,9 +37,15 @@ export default function ConfirmDialog({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleDialogClose}>Go back</Button>
-        <Button onClick={handleDialogAction} color='error' autoFocus>
+        <LoadingButton
+          onClick={handleDialogAction}
+          disabled={loading}
+          loading={loading}
+          color='error'
+          autoFocus
+        >
           Delete
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );

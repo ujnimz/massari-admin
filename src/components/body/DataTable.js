@@ -121,7 +121,7 @@ const DataTableToolbar = ({numSelected}) => {
           id='tableTitle'
           component='div'
         >
-          Products
+          All Products
         </Typography>
       )}
 

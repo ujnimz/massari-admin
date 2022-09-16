@@ -103,6 +103,7 @@ const SingleProduct = () => {
   const {
     isLoading: isProductsLoading,
     isSaving,
+    isDeleting,
     product,
   } = useSelector(state => state.productState);
   const {isLoading: isCategoriesLoading, allCategories} = useSelector(
@@ -110,7 +111,7 @@ const SingleProduct = () => {
   );
 
   useEffect(() => {
-    if (!product || product._id !== productId) {
+    if (!isSubmitSuccess && (!product || product._id !== productId)) {
       dispatch(getProduct(productId));
     } else {
       setName(product?.name);
@@ -152,7 +153,7 @@ const SingleProduct = () => {
 
       dispatch(resetSuccess());
     };
-  }, [productId, product, dispatch]);
+  }, [isSubmitSuccess, productId, product, dispatch]);
 
   useEffect(() => {
     if (!allCategories) {
@@ -270,6 +271,7 @@ const SingleProduct = () => {
   const handleDelete = () => {
     dispatch(deleteProduct({productId}));
     setDialogOpen(!dialogOpen);
+    setIsSubmitSuccess(true);
   };
 
   if (isProductsLoading) {
@@ -280,7 +282,7 @@ const SingleProduct = () => {
     );
   }
 
-  if (isSubmitSuccess) {
+  if (isSubmitSuccess && !isDeleting) {
     return <Navigate to={`/products`} />;
   }
 
@@ -598,7 +600,8 @@ const SingleProduct = () => {
         </Box>
       </Container>
       <ConfirmDialog
-        isOpen={dialogOpen}
+        loading={isDeleting}
+        isOpen={dialogOpen || isDeleting}
         message={`Delete Product`}
         description={`Do you really want to delete the product ${name}? This action cannot be undone.`}
         handleClose={handleDialog}

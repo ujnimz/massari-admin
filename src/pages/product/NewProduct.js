@@ -23,7 +23,7 @@ import PageLayout from '../../components/layouts/PageLayout';
 import MainTitle from '../../components/ui/elements/MainTitle';
 // REDUX
 import {useDispatch, useSelector} from 'react-redux';
-import {addProduct} from '../../redux/slices/productSlice';
+import {addProduct, resetProductState} from '../../redux/slices/productSlice';
 import {getAllCategories} from '../../redux/slices/categorySlice';
 
 // STYLES
@@ -69,7 +69,9 @@ const UploadButton = styled(Button)(({theme}) => ({
 const NewProduct = () => {
   const dispatch = useDispatch();
 
-  const [submitted, setSubmitted] = useState(false);
+  //const [submitted, setSubmitted] = useState(false);
+  const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
+
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [stock, setStock] = useState(null);
@@ -89,20 +91,19 @@ const NewProduct = () => {
   const [seoTitle, setSeoTitle] = useState(null);
   const [seoDescription, setSeoDescription] = useState(null);
 
-  const {isLoading: isProductsLoading, product} = useSelector(
-    state => state.productState,
-  );
+  const {isSaving, product} = useSelector(state => state.productState);
   // Get all the categories
   const {isLoading: isCategoriesLoading, allCategories} = useSelector(
     state => state.categoryState,
   );
 
   useEffect(() => {
+    dispatch(resetProductState());
     if (!allCategories) {
       dispatch(getAllCategories());
     }
     return () => {
-      //second();
+      resetProductState();
     };
   }, [allCategories, dispatch]);
 
@@ -180,7 +181,7 @@ const NewProduct = () => {
   };
 
   const isReadyToSubmit = () => {
-    return !(name && price && sku && stock);
+    return !(name && price && stock);
   };
 
   // Submit and Save Data
@@ -204,12 +205,11 @@ const NewProduct = () => {
       seoTitle,
       seoDescription,
     };
-
     dispatch(addProduct({productData}));
-    setSubmitted(true);
+    setIsSubmitSuccess(true);
   };
 
-  if (submitted && product) {
+  if (isSubmitSuccess && product) {
     return <Navigate to={`/products/${product._id}`} />;
   }
 
@@ -479,12 +479,12 @@ const NewProduct = () => {
             <StyledPaper>
               <Grid xs={12}>
                 <StyledButton
-                  loading={isProductsLoading}
+                  loading={isSaving}
                   type='submit'
                   variant='contained'
                   disabled={isReadyToSubmit()}
                 >
-                  Submit
+                  {isSaving ? 'Saving...' : 'Save'}
                 </StyledButton>
               </Grid>
             </StyledPaper>
