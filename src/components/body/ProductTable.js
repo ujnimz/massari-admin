@@ -28,7 +28,7 @@ import {visuallyHidden} from '@mui/utils';
 // HELPERS
 import {getComparator, stableSort} from '../../helpers/tableTools';
 
-const DataTableHead = ({
+const ProductTableHead = ({
   onSelectAllClick,
   order,
   orderBy,
@@ -81,7 +81,7 @@ const DataTableHead = ({
   );
 };
 
-DataTableHead.propTypes = {
+ProductTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -90,7 +90,7 @@ DataTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const DataTableToolbar = ({numSelected}) => {
+const ProductTableToolbar = ({numSelected}) => {
   return (
     <Toolbar
       sx={{
@@ -142,7 +142,7 @@ const DataTableToolbar = ({numSelected}) => {
   );
 };
 
-DataTableToolbar.propTypes = {
+ProductTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
@@ -154,7 +154,7 @@ const StyledStatus = styled(Typography)(({theme}) => ({
   lineHeight: 1,
 }));
 
-const DataTable = ({rows, headCells}) => {
+const ProductTable = ({rows, headCells}) => {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('stock');
   const [selected, setSelected] = React.useState([]);
@@ -248,14 +248,14 @@ const DataTable = ({rows, headCells}) => {
   return (
     <Box sx={{width: '100%'}}>
       <Paper sx={{width: '100%', mb: 2}}>
-        <DataTableToolbar numSelected={selected.length} />
+        <ProductTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{minWidth: 750}}
             aria-labelledby='tableTitle'
             size={dense ? 'small' : 'medium'}
           >
-            <DataTableHead
+            <ProductTableHead
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -343,4 +343,4 @@ const DataTable = ({rows, headCells}) => {
   );
 };
 
-export default DataTable;
+export default ProductTable;

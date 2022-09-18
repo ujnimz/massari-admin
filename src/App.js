@@ -16,6 +16,8 @@ import Settings from './pages/Settings';
 import Products from './pages/product/Products';
 import SingleProduct from './pages/product/SingleProduct';
 import NewProduct from './pages/product/NewProduct';
+import Categories from './pages/category/Categories';
+import NewCategory from './pages/category/NewCategory';
 
 // DATA
 import {useSelector, useDispatch} from 'react-redux';
@@ -93,6 +95,8 @@ function App() {
             <Route path='/products' element={<Products />} />
             <Route path='/products/new' element={<NewProduct />} />
             <Route path='/products/:productId' element={<SingleProduct />} />
+            <Route path='/categories' element={<Categories />} />
+            <Route path='/categories/new' element={<NewCategory />} />
           </Route>
           <Route element={<Login />} path='/login' />
           <Route element={<Register />} path='/register' />

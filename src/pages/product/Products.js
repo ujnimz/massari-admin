@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 // UI
 import Loading from '../Loading';
 import PageLayout from '../../components/layouts/PageLayout';
-import DataTable from '../../components/body/DataTable';
+import DataTable from '../../components/body/ProductTable';
 // HELPERS
 import {productsHeadCells, createProductData} from '../../helpers/productTable';
 // REDUX

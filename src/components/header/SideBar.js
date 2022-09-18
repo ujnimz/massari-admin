@@ -21,7 +21,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import StarBorder from '@mui/icons-material/StarBorder';
+import CategoryIcon from '@mui/icons-material/Category';
 
 // REDUX
 import {useSelector, useDispatch} from 'react-redux';
@@ -44,10 +44,15 @@ export default function PersistentDrawerLeft() {
   const theme = useTheme();
 
   const {drawerOpen} = useSelector(state => state.themeState);
-  const [open, setOpen] = useState(true);
+  const [productOpen, setProductOpen] = useState(true);
+  const [categoryOpen, setCategoryOpen] = useState(true);
 
-  const handleClick = () => {
-    setOpen(!open);
+  const handleProductClick = () => {
+    setProductOpen(productOpen => !productOpen);
+  };
+
+  const handleCategoryClick = () => {
+    setCategoryOpen(categoryOpen => !categoryOpen);
   };
 
   const handleDrawer = () => {
@@ -87,15 +92,14 @@ export default function PersistentDrawerLeft() {
             <ListItemText primary='Dashboard' />
           </ListItemButton>
         </ListItem>
-
-        <ListItemButton onClick={handleClick}>
+        <ListItemButton onClick={handleProductClick}>
           <ListItemIcon>
             <LocalMallIcon />
           </ListItemIcon>
           <ListItemText primary='Products' />
-          {open ? <ExpandLess /> : <ExpandMore />}
+          {productOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
-        <Collapse in={open} timeout='auto' unmountOnExit>
+        <Collapse in={productOpen} timeout='auto' unmountOnExit>
           <List component='div' disablePadding>
             <ListItemButton sx={{pl: 9}} component={Link} to='/products'>
               <ListItemText primary='All Products' />
@@ -106,6 +110,23 @@ export default function PersistentDrawerLeft() {
           </List>
         </Collapse>
 
+        <ListItemButton onClick={handleCategoryClick}>
+          <ListItemIcon>
+            <CategoryIcon />
+          </ListItemIcon>
+          <ListItemText primary='Categories' />
+          {categoryOpen ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={categoryOpen} timeout='auto' unmountOnExit>
+          <List component='div' disablePadding>
+            <ListItemButton sx={{pl: 9}} component={Link} to='/categories'>
+              <ListItemText primary='All Categories' />
+            </ListItemButton>
+            <ListItemButton sx={{pl: 9}} component={Link} to='/categories/new'>
+              <ListItemText primary='Create New' />
+            </ListItemButton>
+          </List>
+        </Collapse>
         <ListItem disablePadding>
           <ListItemButton component={Link} to='/orders'>
             <ListItemIcon>
@@ -114,7 +135,6 @@ export default function PersistentDrawerLeft() {
             <ListItemText primary='Orders' />
           </ListItemButton>
         </ListItem>
-
         <ListItem disablePadding>
           <ListItemButton component={Link} to='/customers'>
             <ListItemIcon>
