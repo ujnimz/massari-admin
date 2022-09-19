@@ -37,7 +37,7 @@ const Categories = () => {
 
   if (allCategories?.length) {
     dataRows = allCategories.map(item =>
-      createCategoryData(item._id, item.name, 5),
+      createCategoryData(item._id, item.name, item.products.length),
     );
   }
 

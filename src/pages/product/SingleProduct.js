@@ -30,7 +30,6 @@ import {
   getProduct,
   updateProduct,
   deleteProduct,
-  resetSuccess,
 } from '../../redux/slices/productSlice';
 import {getAllCategories} from '../../redux/slices/categorySlice';
 // STYLES
@@ -150,8 +149,6 @@ const SingleProduct = () => {
       setImagesPreview([]);
       setSeoTitle(null);
       setSeoDescription(null);
-
-      dispatch(resetSuccess());
     };
   }, [isSubmitSuccess, productId, product, dispatch]);
 
@@ -162,7 +159,7 @@ const SingleProduct = () => {
     return () => {
       //second();
     };
-  }, [allCategories, categories, dispatch]);
+  }, [allCategories, dispatch]);
 
   const updateProductImagesChange = e => {
     const files = Array.from(e.target.files);
@@ -213,25 +210,22 @@ const SingleProduct = () => {
 
   // Handle product category check boxes
   const handleCategoryChange = ({_id, name}) => {
+    let arrCopy = [...categories];
     const isIn = isCategoryIn(_id);
     if (isIn) {
-      let arrCopy = [...categories];
-      var index = arrCopy
-        .map(x => {
-          return x.category_id;
-        })
-        .indexOf(_id);
+      var index = arrCopy.indexOf(_id);
       arrCopy.splice(index, 1);
       setCategories(arrCopy);
     } else {
-      setCategories([...categories, {category_id: _id, category_name: name}]);
+      arrCopy.push(_id);
+      setCategories(arrCopy);
     }
   };
 
   // check if the category is in the product categories
   const isCategoryIn = id => {
     if (categories.length > 0) {
-      const found = categories.some(cat => cat.category_id === id);
+      const found = categories.some(cat_id => cat_id === id);
       return found;
     } else {
       return false;
@@ -451,25 +445,29 @@ const SingleProduct = () => {
                 <SectionTitle variant='h6' gutterBottom>
                   Product Categories
                 </SectionTitle>
-                {isCategoriesLoading ? (
-                  <span>loading...</span>
+                {allCategories ? (
+                  isCategoriesLoading ? (
+                    <span>loading...</span>
+                  ) : (
+                    <FormGroup>
+                      {allCategories.map((cat, index) => (
+                        <FormControlLabel
+                          key={index}
+                          control={
+                            <Checkbox
+                              checked={isCategoryIn(cat._id)}
+                              onChange={() => handleCategoryChange(cat)}
+                              name={cat._id}
+                              inputProps={{'aria-label': 'controlled'}}
+                            />
+                          }
+                          label={cat.name}
+                        />
+                      ))}
+                    </FormGroup>
+                  )
                 ) : (
-                  <FormGroup>
-                    {allCategories.map((cat, index) => (
-                      <FormControlLabel
-                        key={index}
-                        control={
-                          <Checkbox
-                            checked={isCategoryIn(cat._id)}
-                            onChange={() => handleCategoryChange(cat)}
-                            name={cat._id}
-                            inputProps={{'aria-label': 'controlled'}}
-                          />
-                        }
-                        label={cat.name}
-                      />
-                    ))}
-                  </FormGroup>
+                  <span>No Categories</span>
                 )}
               </Grid>
             </StyledPaper>

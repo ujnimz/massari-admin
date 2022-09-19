@@ -20,7 +20,6 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import Chip from '@mui/material/Chip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
@@ -270,7 +269,7 @@ const CategoryTable = ({rows, headCells}) => {
                       <TableCell>{row.productCount}</TableCell>
 
                       <TableCell align='right'>
-                        <EditLink to={`/products/${row.id}`}>
+                        <EditLink to={`/categories/${row.id}`}>
                           <ModeEditIcon />
                         </EditLink>
                       </TableCell>

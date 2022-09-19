@@ -1,4 +1,3 @@
-import {useState} from 'react';
 import {Link} from 'react-router-dom';
 // MUI
 import {styled, useTheme} from '@mui/material/styles';
@@ -25,7 +24,11 @@ import CategoryIcon from '@mui/icons-material/Category';
 
 // REDUX
 import {useSelector, useDispatch} from 'react-redux';
-import {switchDrawer} from '../../redux/slices/themeSlice';
+import {
+  switchDrawer,
+  switchProductsMenu,
+  switchCategoriesMenu,
+} from '../../redux/slices/themeSlice';
 
 // STYLES
 const drawerWidth = 240;
@@ -43,16 +46,16 @@ export default function PersistentDrawerLeft() {
   const dispatch = useDispatch();
   const theme = useTheme();
 
-  const {drawerOpen} = useSelector(state => state.themeState);
-  const [productOpen, setProductOpen] = useState(true);
-  const [categoryOpen, setCategoryOpen] = useState(true);
+  const {drawerOpen, productOpen, categoryOpen} = useSelector(
+    state => state.themeState,
+  );
 
   const handleProductClick = () => {
-    setProductOpen(productOpen => !productOpen);
+    dispatch(switchProductsMenu());
   };
 
   const handleCategoryClick = () => {
-    setCategoryOpen(categoryOpen => !categoryOpen);
+    dispatch(switchCategoriesMenu());
   };
 
   const handleDrawer = () => {

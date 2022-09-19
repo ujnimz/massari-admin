@@ -40,6 +40,7 @@ const Products = () => {
         item.sku,
         item.stock,
         item.price,
+        item.salePrice,
         item.ratings,
         item.status,
       ),

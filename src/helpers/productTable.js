@@ -4,6 +4,7 @@ export function createProductData(
   sku,
   stock,
   price,
+  salePrice,
   ratings,
   status,
 ) {
@@ -13,6 +14,7 @@ export function createProductData(
     sku,
     stock,
     price,
+    salePrice,
     ratings,
     status,
   };
@@ -42,6 +44,12 @@ export const productsHeadCells = [
     align: 'left',
     disablePadding: false,
     label: 'Price (SAR)',
+  },
+  {
+    id: 'salePrice',
+    align: 'left',
+    disablePadding: false,
+    label: 'Sale Price (SAR)',
   },
   {
     id: 'ratings',

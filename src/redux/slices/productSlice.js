@@ -143,7 +143,6 @@ export const deleteProduct = createAsyncThunk(
 const initialState = {
   products: null,
   product: null,
-  success: false,
   error: null,
   isLoading: false,
   isSaving: false,
@@ -158,12 +157,6 @@ const productSlice = createSlice({
         ...initialState,
       };
     },
-    resetSuccess(state) {
-      return {
-        ...state,
-        success: false,
-      };
-    },
   },
   extraReducers: builder => {
     builder
@@ -173,7 +166,6 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(getProducts.fulfilled, (state, action) => {
-        state.success = true;
         state.products = action.payload;
         state.error = null;
         state.isLoading = false;
@@ -189,7 +181,6 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(getProduct.fulfilled, (state, action) => {
-        state.success = true;
         state.product = action.payload;
         state.error = null;
         state.isLoading = false;
@@ -205,7 +196,6 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
-        state.success = true;
         state.product = action.payload;
         state.error = null;
         state.isSaving = false;
@@ -221,7 +211,6 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(addProduct.fulfilled, (state, action) => {
-        state.success = true;
         state.product = action.payload;
         state.error = null;
         state.isSaving = false;
@@ -237,7 +226,6 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
-        state.success = true;
         state.product = null;
         state.error = null;
         state.isDeleting = false;
@@ -248,5 +236,5 @@ const productSlice = createSlice({
       });
   },
 });
-export const {resetProductState, resetSuccess} = productSlice.actions;
+export const {resetProductState} = productSlice.actions;
 export default productSlice.reducer;
