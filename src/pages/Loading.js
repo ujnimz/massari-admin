@@ -7,10 +7,9 @@ import Box from '@mui/material/Box';
 // STYLES
 const StyledBox = styled(Box)(({theme}) => ({
   display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'stretch',
+  justifyContent: 'center',
   alignItems: 'center',
-  height: '100%',
+  height: '100vh',
   backgroundColor: theme.palette.background.default,
 }));
 

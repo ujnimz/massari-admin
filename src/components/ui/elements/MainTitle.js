@@ -7,7 +7,7 @@ const StyledTypography = styled(Typography)(({theme, invert}) => ({
   color:
     invert === 'true'
       ? theme.palette.background.default
-      : theme.palette.primary.contrastText,
+      : theme.palette.primary.main,
 }));
 
 const MainTitle = ({title, invert = 'false'}) => {

@@ -46,6 +46,9 @@ function App() {
                 primary: {
                   main: '#5048E4',
                 },
+                secondary: {
+                  main: '#11B980',
+                },
                 divider: '#e6e8f0',
                 text: {
                   primary: '#121828',
