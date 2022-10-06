@@ -21,6 +21,7 @@ import NewCategory from './pages/category/NewCategory';
 import SingleCategory from './pages/category/SingleCategory';
 import Orders from './pages/order/Orders';
 import SingleOrder from './pages/order/SingleOrder';
+import Customers from './pages/customers/Customers';
 
 // DATA
 import {useSelector, useDispatch} from 'react-redux';
@@ -109,6 +110,7 @@ function App() {
             />
             <Route path='/orders' element={<Orders />} />
             <Route path='/orders/:orderId' element={<SingleOrder />} />
+            <Route path='/customers' element={<Customers />} />
           </Route>
 
           <Route element={<Login />} path='/login' />
