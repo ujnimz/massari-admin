@@ -20,7 +20,6 @@ import Categories from './pages/category/Categories';
 import NewCategory from './pages/category/NewCategory';
 import SingleCategory from './pages/category/SingleCategory';
 import Orders from './pages/order/Orders';
-import NewOrder from './pages/order/NewOrder';
 import SingleOrder from './pages/order/SingleOrder';
 
 // DATA
@@ -109,7 +108,6 @@ function App() {
               element={<SingleCategory />}
             />
             <Route path='/orders' element={<Orders />} />
-            <Route path='/orders/new' element={<NewOrder />} />
             <Route path='/orders/:orderId' element={<SingleOrder />} />
           </Route>
 
