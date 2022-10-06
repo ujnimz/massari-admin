@@ -28,7 +28,7 @@ import {visuallyHidden} from '@mui/utils';
 // HELPERS
 import {getComparator, stableSort} from '../../helpers/tableTools';
 
-const ProductTableHead = ({
+const OrderTableHead = ({
   onSelectAllClick,
   order,
   orderBy,
@@ -81,7 +81,7 @@ const ProductTableHead = ({
   );
 };
 
-ProductTableHead.propTypes = {
+OrderTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -90,7 +90,7 @@ ProductTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const ProductTableToolbar = ({numSelected}) => {
+const OrderTableToolbar = ({numSelected}) => {
   return (
     <Toolbar
       sx={{
@@ -121,7 +121,7 @@ const ProductTableToolbar = ({numSelected}) => {
           id='tableTitle'
           component='div'
         >
-          All Products
+          All Categories
         </Typography>
       )}
 
@@ -142,7 +142,7 @@ const ProductTableToolbar = ({numSelected}) => {
   );
 };
 
-ProductTableToolbar.propTypes = {
+OrderTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
@@ -154,13 +154,13 @@ const StyledStatus = styled(Typography)(({theme}) => ({
   lineHeight: 1,
 }));
 
-const ProductTable = ({rows, headCells}) => {
+const OrderTable = ({rows, headCells}) => {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('stock');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -218,7 +218,7 @@ const ProductTable = ({rows, headCells}) => {
 
   const getStatusChip = status => {
     switch (status) {
-      case 'Published':
+      case 'Completed':
         return (
           <Chip
             size='small'
@@ -226,12 +226,76 @@ const ProductTable = ({rows, headCells}) => {
             color='success'
           />
         );
-      case 'Draft':
+      case 'Delivered':
+        return (
+          <Chip
+            size='small'
+            label={<StyledStatus variant='caption'>{status}</StyledStatus>}
+            color='success'
+          />
+        );
+      case 'Shipped':
+        return (
+          <Chip
+            size='small'
+            label={<StyledStatus variant='caption'>{status}</StyledStatus>}
+            color='success'
+          />
+        );
+      case 'Delivery':
+        return (
+          <Chip
+            size='small'
+            label={<StyledStatus variant='caption'>{status}</StyledStatus>}
+            color='info'
+          />
+        );
+      case 'Pending Payment':
+        return (
+          <Chip
+            size='small'
+            label={<StyledStatus variant='caption'>{status}</StyledStatus>}
+            color='primary'
+          />
+        );
+      case 'Processing':
         return (
           <Chip
             size='small'
             label={<StyledStatus variant='caption'>{status}</StyledStatus>}
             color='warning'
+          />
+        );
+      case 'Return':
+        return (
+          <Chip
+            size='small'
+            label={<StyledStatus variant='caption'>{status}</StyledStatus>}
+            color='warning'
+          />
+        );
+      case 'On Hold':
+        return (
+          <Chip
+            size='small'
+            label={<StyledStatus variant='caption'>{status}</StyledStatus>}
+            color='warning'
+          />
+        );
+      case 'Refunded':
+        return (
+          <Chip
+            size='small'
+            label={<StyledStatus variant='caption'>{status}</StyledStatus>}
+            color='warning'
+          />
+        );
+      case 'Faild':
+        return (
+          <Chip
+            size='small'
+            label={<StyledStatus variant='caption'>{status}</StyledStatus>}
+            color='error'
           />
         );
       default:
@@ -248,14 +312,14 @@ const ProductTable = ({rows, headCells}) => {
   return (
     <Box sx={{width: '100%'}}>
       <Paper sx={{width: '100%', mb: 2}}>
-        <ProductTableToolbar numSelected={selected.length} />
+        <OrderTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{minWidth: 750}}
             aria-labelledby='tableTitle'
             size={dense ? 'small' : 'medium'}
           >
-            <ProductTableHead
+            <OrderTableHead
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -298,16 +362,12 @@ const ProductTable = ({rows, headCells}) => {
                         scope='row'
                         padding='none'
                       >
-                        {row.name}
+                        {row.totalPrice}
                       </TableCell>
-                      <TableCell>{row.sku}</TableCell>
-                      <TableCell>{row.stock}</TableCell>
-                      <TableCell>{row.price}</TableCell>
-                      <TableCell>{row.salePrice ? row.salePrice : 0}</TableCell>
-                      <TableCell>{row.ratings}</TableCell>
-                      <TableCell>{getStatusChip(row.status)}</TableCell>
+                      <TableCell>{row.paidAt}</TableCell>
+                      <TableCell>{getStatusChip(row.orderStatus)}</TableCell>
                       <TableCell align='right'>
-                        <EditLink to={`/products/${row.id}`}>
+                        <EditLink to={`/orders/${row.id}`}>
                           <ModeEditIcon />
                         </EditLink>
                       </TableCell>
@@ -327,7 +387,7 @@ const ProductTable = ({rows, headCells}) => {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[10, 20, 30]}
+          rowsPerPageOptions={[5, 10, 20]}
           component='div'
           count={rows.length}
           rowsPerPage={rowsPerPage}
@@ -344,4 +404,4 @@ const ProductTable = ({rows, headCells}) => {
   );
 };
 
-export default ProductTable;
+export default OrderTable;
