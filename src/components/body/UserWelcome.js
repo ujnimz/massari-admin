@@ -1,3 +1,5 @@
+import {Link} from 'react-router-dom';
+// MUI
 import {styled} from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -57,9 +59,10 @@ const UserWelcome = () => {
         </CardContent>
         <CardActions>
           <StyledButton
+            component={Link}
             variant='contained'
             endIcon={<StartIcon />}
-            href='/products'
+            to='/products'
           >
             View Products
           </StyledButton>
